@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/mingxi.css"/>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<script type="text/javascript" src="js/mui.js" ></script>
+		<link rel="stylesheet" href="css/mui.css" />
+		<link rel="stylesheet" href="css/base.css" />
+	</head>
+	<style type="text/css">
+		.main{height: 100%;overflow-y: scroll;}
+	</style>
+	<body>
+		<div class="header mui-action-back" >
+				<div class="header-aside mui-">
+					<img src="img/zuo.png" />
+				</div>
+				<div class="header-text">明细</div>
+				<div class="header-aside">
+				</div>
+		</div>
+		
+		<div class="wrapper">
+			<div class="main" id="list" >
+				<!--<div class="main-one">
+					<div class="one-top">
+						<div class="top-text">支付宝</div>
+						<div class="top-text">+1000</div>
+					</div>
+					<div class="one-content">
+						<div class="content-text">余额：2654.52</div>
+						<div class="content-text">2018.7.18</div>
+					</div>
+					<div class="one-bottom">
+						<div class="bottom-text">类型：充值</div>
+						<span style="float:right;">流水编号：xxxxxxxxxxxxxxxxxx</span>
+					</div>					
+				</div>-->
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script>
+			var url_url=localStorage.getItem("http_url");
+			
+			var userid=localStorage.getItem("us_user_id");
+			
+			var list=document.getElementById("list")
+				
+			
+			$.ajax({
+				type: "get",
+				url: url_url + "/userBookKeeping/List",
+				dataType: 'json',
+				async: true,
+				data:{ 
+					'userId':userid,
+					'page':1
+					
+				},
+				success: function(data) {
+					console.log(JSON.stringify(data));
+					list.innerHTML="";		
+						
+					for (var a in data.data) {
+						
+						var tpml='<div class="main-one">'
+										+'<div class="one-top">'
+											+'<div class="top-text">充值类似：'+data.data[a].us_bookkeeping_title+'</div>'
+											+'<div class="top-text">'+data.data[a].us_bookkeeping_money+'</div>'
+										+'</div>'
+										+'<div class="one-content">'
+											+'<div class="content-text">余额：'+data.data[a].us_balance+'</div>'
+											+'<span style="float:right;">流水编号：'+data.data[a].us_bookkeeping_id+'</span>'
+										+'</div>'
+										+'<div class="one-bottom">'
+											+'<div class="bottom-text">类型：'+data.data[a].us_bookkeeping_type_text+'</div>'
+											+'<div class="content-text">创建时间：'+data.data[a].us_bookkeeping_time+'</div>'
+										+'</div>'				
+									+'</div>';
+						
+						list.innerHTML+=tpml;			
+					}	
+				},
+				error: function(data) {
+					console.log(JSON.stringify(data));
+				} 
+			}); 
+			
+		</script>
+	</body>
+</html>

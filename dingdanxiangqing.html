@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/rem.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<link rel="stylesheet" href="css/dingdan.css" />
+	</head>
+	<body class="bodtcom">
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">订单详情</h1>
+		</header>
+		<div class="mui-content" id="list">
+			<div class="Order_ca">
+				<div class="Order_span">
+					<span class="ding">订单编号：</span>
+					<button class="Orderbada">取消订单</button>
+				</div>
+				<div class="Order_span">
+					<span class="ding">下单时间：2018-7-31  20:00:00</span><br />
+					<span class="ding">上门时间：2018-7-31  20:00:00</span>
+				</div>
+				<div class="Order_span">
+					<button class="Orderbada">等待分配</button>
+				</div>
+				<div class="Order_span">
+					<span class="ding">下单时间：2018-7-31  20:00:00</span>
+				</div>
+
+				<div class="Order_span">
+					<span class="ding">订单类型：2018-7-31  20:00:00</span>
+				</div>
+
+				<div class="Order_span">
+					<span class="ding">备注内容:</span>
+					<span class="you">如果你无法简洁的表达你的想法， 那只说明你还不够了解它。阿尔伯特·爱因斯坦</span>
+				</div>
+			</div>
+			<div class="Order_ca"></div>
+			<div>
+				<div class="fulfi">
+					<!--第一步-->
+					<a>1</a>
+					<h1>等待派单</h1>
+					<div class="img-da">
+						<img src="img/da.png" />
+					</div>
+					<!--第二步-->
+					<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">2</a>
+					<h1 style="width: 80%;">派单成功</h1>
+					<div class="img-da">
+						<img src="img/da.png" />
+					</div>
+
+					<!--第三步-->
+					<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">3</a>
+					<h1 style="width: 80%;">等待接单中</h1>
+					<div class="img-da">
+						<img src="img/da.png" />
+					</div>
+
+					<!--第四步-->
+					<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">3</a>
+					<h1 style="width: 80%;">已接单，正在前往途中,<span style="color: red;">查看师傅位置</span></h1>
+					<div class="img-da">
+						<img src="img/da.png" />
+					</div>
+
+					<!--第五步-->
+					<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">3</a>
+					<h1 style="width: 80%;">师傅已到达</h1>
+					<div class="img-da">
+						<img src="img/da.png" />
+					</div>
+					<!--第六步-->
+					<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;margin-top: 0.3rem;">3</a>
+					<h1 style="width: 80%;margin-top: 0.4rem;">服务已完成，请评价</h1>
+					<div class="buttonp">
+						<button>我要评价</button>
+					</div>
+				</div>
+
+				<script type="text/javascript" src="js/mui.min.js"></script>
+				<script type="text/javascript" src="js/dui.js"></script>
+				<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+				<script>
+					var url_url = localStorage.getItem("http_url");
+					var oid_id = localStorage.getItem("oid_id");
+					var list = document.getElementById("list");
+					var state = localStorage.getItem("state")
+					var zuoBiao = null
+					$.ajax({
+						type: "GET",
+						url: url_url + "/userOrder/OrderInfor",
+						dataType: 'json',
+						async: true,
+						data: {
+							'orderId': oid_id
+						},
+						success: function(data) {
+							if(data.data.master != null) {
+								zuoBiao = [data.data.master.us_user_x, data.data.master.us_user_y]
+							} else {
+								zuoBiao = [117, 34]
+							}
+							if(data.data.b_order_details_note = 1) {
+								var p = '<span class="ding">订单类型:抢单</span>'
+							} else {
+								var p = '<span class="you">订单类型:派单</span>'
+							}
+							if(data.data.pb_order_is_comment == 0 || data.data.pb_order_is_comment == null) {
+								if(data.data.pb_order_state == 0) {
+									var tyu = '<button class="Orderbada" data_id="' + data.data.pb_order_id + '">取消订单</button>'
+									var tuy = '<button class="Orderbada ditaID_id" data_id="' + data.data.pb_order_id + '" style="display: none;"">我要评价</button>'
+								} else if(data.data.pb_order_state == 10) {
+									var tuy = '<button class="Orderbada ditaID_id" data_id="' + data.data.pb_order_id + '" style="display: none;"">我要评价</button>'
+									var tyu = ''
+								} else if(data.data.pb_order_state == 20) {
+									var tyu = '<button class="Orderbada" data_id="' + data.data.pb_order_id + '" style="display: none;">取消订单</button>'
+									var tuy = '<button class="Orderbada ditaID_id" data_id="' + data.data.pb_order_id + '" style="display: block;"">我要评价</button>'
+								} else {
+									var tyu = ''
+									var tuy = ''
+								}
+							} else {
+								var tyu = ''
+								var tuy = ''
+							}
+
+							if(data.data.pb_order_state == 0) {
+								var t = '';
+								var o = '<a>1</a>' +
+									'<h1>新单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;color: #ffffff;">2</a>' +
+									'<h1 style="width: 80%;">等待接单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">3</a>' +
+									'<h1 style="width: 80%;">等待接单中</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">4</a>' +
+									'<h1 style="width: 80%;">已接单，正在前往途中,<span style="color: red;" onclick="gopay()">查看师傅位置</span></h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">5</a>' +
+									'<h1 style="width:80%;">师傅已到达</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;margin-top: 0.3rem;">6</a>' +
+									'<h1 style="width: 80%;margin-top: 0.4rem;"">服务已完成，请评价</h1>';
+
+							} else if(data.data.pb_order_state == 11) {
+								var t = '';
+								var o = '<a>1</a>' +
+									'<h1>订单已取消</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 1px solid #DDD;color: #ffffff;border: 0px;">2</a>' +
+									'<h1 style="width: 80%;">结束订单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">3</a>' +
+									'<h1 style="width: 80%;">结束订单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">4</a>' +
+									'<h1 style="width: 80%;">已接单，正在前往途中,<span style="color: red;" onclick="gopay()">查看师傅位置</span></h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">5</a>' +
+									'<h1 style="width:80%;">师傅已到达</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;margin-top: 0.3rem;">6</a>' +
+									'<h1 style="width: 80%;margin-top: 0.3rem;"">服务已完成，请评价</h1>';
+
+							} else if(data.data.pb_order_state == 10) {
+								var t = '<div class="Order_ca">' +
+									'<div class="fle" style="margin-top:0.3rem;margin-bottom: 0.3rem;border: 1px slod red;">' +
+									'<div class="fl">' +
+									'</div>' +
+									'</div>';
+
+								var o = '<a>1</a>' +
+									'<h1>已结单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">2</a>' +
+									'<h1 style="width: 80%;">已结单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">3</a>' +
+									'<h1 style="width: 80%;">订单进行中</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">4</a>' +
+									'<h1 style="width: 80%;">已接单，正在前往途中,<span style="color: red;" onclick="gopay()">查看师傅位置</span></h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">5</a>' +
+									'<h1 style="width:80%;">师傅已到达</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;margin-top: 0.3rem;">6</a>' +
+									'<h1 style="width: 80%;margin-top: 0.4rem;"">服务已完成，请评价</h1>';
+							} else if(data.data.pb_order_state == 20) {
+								var t = '<div class="Order_ca">' +
+									'<div class="fle" style="margin-top:0.3rem;margin-bottom: 0.3rem;border: 1px slod red;">' +
+									'<div class="fl">' +
+									'<img style="width:1rem;height:1rem;" src="' + url_url + data.data.master.us_user_head_portrait + '">' +
+									'<span style="font-size: 0.28rem;margin-left:20px;">' + data.data.master.us_user_name + '</span>' +
+									'</div>' +
+									'<img phone="' + data.data.master.us_user_phone + '" style="margin-right:0.5rem;width: 0.64rem;height: 0.64rem;" src="img/dianhua.png">' +
+									'</div>' +
+									'</div>';
+
+								var o = '<a>1</a>' +
+									'<h1>已接单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">2</a>' +
+									'<h1 style="width: 80%;">已接单</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">3</a>' +
+									'<h1 style="width: 80%;">订单进行中</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">4</a>' +
+									'<h1 style="width: 80%;">已接单，正在前往途中,<span style="color: red;" onclick="gopay()">查看师傅位置</span></h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">5</a>' +
+									'<h1 style="width:80%;">师傅已到达</h1>' +
+									'<div class="img-da">' +
+									'<img src="img/da.png"/>' +
+									'</div>' +
+									'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;margin-top: 0.3rem;">6</a>' +
+									'<h1 style="width: 80%;margin-top: 0.4rem;"">服务已完成，请评价</h1>';
+							}else{
+								var t=''
+								var o=''
+							}
+							var tpml = '<div class="Order_ca" id="' + data.data.pb_order_number + '">' +
+								'<div class="Order_span">' +
+								'<span class="ding">订单编号:' + data.data.pb_order_number + '</span>' +
+								tyu +
+								tuy +
+								'</div>' +
+								'<div class="Order_span">' +
+								'<span class="ding">下单时间:' + data.data.create_time_show + '</span><br />' +
+								'<span class="ding">上门时间:' + data.data.sm_time + '</span>' +
+								'</div>' +
+								'<div class="Order_span">' +
+								'<span class="ding">详细地址:' + data.data.pb_region_text + data.data.pb_order_detailed + '</span>' +
+								'</div>' +
+								'<div class="Order_span">' +
+								p +
+								'</div>' +
+								'<div class="Order_span">' +
+								'<span class="ding">备注内容:</span>' +
+								'<span class="you">' + data.data.pb_order_details_note + '</span>' +
+								'</div>' +
+								'</div>' +
+								t +
+								'<div class="fulfi">' +
+								o +
+								'</div>';
+							list.innerHTML = tpml;
+							data_n();
+						},
+						error: function(data) {
+							console.log(JSON.stringify(data));
+						}
+					});
+					//取消订单
+					function data_n() {
+						var data_numb = document.getElementsByClassName("Orderbada")
+						var ditaID_id = document.getElementsByClassName("ditaID_id");
+						var phone = document.getElementsByClassName("phone");
+						data_numb[0].addEventListener("tap", function() {
+							var data_id = this.getAttribute('data_id');
+							var us_user_id = localStorage.getItem("us_user_id");
+							var nun = "";
+							plus.nativeUI.showWaiting()
+							$.ajax({
+								type: "POST",
+								url: url_url + "/userOrder/SetOrderState",
+								dataType: 'json',
+								async: true,
+								data: {
+									'orderId': data_id,
+									'userId': us_user_id,
+									'infor': nun,
+									'orderState': 'Canel'
+								},
+								success: function(data) {
+									plus.nativeUI.closeWaiting()
+									if(data.code == 200) {
+										mui.plusReady(function() {
+											var wodedingdan = plus.webview.getWebviewById("wodedingdan");
+											mui.fire(wodedingdan, 'wodedingdan', {});
+											wodedingdan.show('pop-in', 300);
+											plus.nativeUI.toast("取消成功！")
+											mui.back()
+										})
+									} else {
+										var wodedingdan = plus.webview.getWebviewById("wodedingdan");
+											mui.fire(wodedingdan, 'wodedingdan', {});
+											wodedingdan.show('pop-in', 300);
+											plus.nativeUI.toast("取消失败！")
+											mui.back()
+									}
+								},
+								error: function(data) {
+									console.log(JSON.stringify(data));
+								}
+							});
+						})
+						//我要评价
+						ditaID_id[0].addEventListener("tap", function() {
+							mui.openWindow({
+								url: './pingjia.html',
+								id: 'pingjia'
+							})
+						})
+					};
+
+					function gopay() {
+						localStorage.setItem('lanlt', JSON.stringify(zuoBiao))
+						mui.openWindow({
+							url: './map.html',
+							id: 'map'
+						})
+					}
+				</script>
+	</body>
+
+</html>

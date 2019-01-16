@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/pingjia.css" />
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrappr" id="app">
+			<div class="header">
+				<div class="header-aside">
+					<img src="img/zuo.png" />
+				</div>
+				<div class="header-content">我要评价</div>
+				<div class="header-aside"></div>
+			</div>
+			<div class="main">
+				<div class="main-four">
+					<img src="img/yuyin.png" />
+					<div class="four-text">语音评价</div>
+				</div>
+				<div class="main-five" @click="recor">{{mytext}}</div>
+			</div>
+		</div>
+	</body>
+	<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		new Vue({
+			el: '#app',
+			data: {
+				myaudio: '',
+				mytext: '录音',
+				myaudio: ''
+			},
+			methods: {
+				recor: function() {
+					// 录音操作
+					var that = this
+					if(that.mytext == '录音') {
+						that.myaudio = plus.audio.getRecorder();
+						that.myaudio.record({
+							filename: "_doc/audio/"
+						}, function(path) {
+							var task = plus.uploader.createUpload(localStorage.getItem('http_url') + "/userUpload/Upload", {
+									method: "POST",
+									blocksize: 204800,
+									priority: 100
+								},
+								function(t, status) {
+									// 上传完成
+									plus.nativeUI.closeWaiting()
+									if(status == 200) {
+										that.myaudio  = t.responseText
+									} else {
+										alert("Upload failed: " + status);
+									}
+								}
+							);
+							task.addFile(path, {
+								key: "file"
+							});
+							task.addData("file", Math.floor(Math.random() * 100000000 + 10000000).toString());
+							task.start();
+						}, function(e) {
+							console.log(JSON.stringify(e))
+						});
+						that.mytext = '结束录音'
+					} else if(this.mytext == '结束录音') {
+						that.myaudio.stop();
+						that.mytext = '评价'
+					} else {
+						$.ajax({
+							type: "post",
+							url: localStorage.getItem('http_url') + "/userOrder/SetOrderState",
+							async: true,
+							dataType: 'json',
+							data: {
+								orderId: localStorage.getItem("oid_id"),
+								userId: localStorage.getItem('us_user_id'),
+								orderState: 'Comment',
+								Frequency: that.myaudio,
+								ServiceManner: 5,
+								ServiceSpeedDoor: 5,
+								ServiceSpeedRepair: 5
+							},
+							success: function(res) {
+								if(res.code == 200) {
+									plus.nativeUI.toast('评价成功')
+									var woddingdan=plus.webview.getWebviewById('wodedingdan')
+									mui.fire(woddingdan,'wodedingdan',{})
+									mui.openWindow({
+										url:'./index.html',
+										id:'index'
+									})
+								} else {
+									plus.nativeUI.toast('评价失败，请稍后重试！')
+								}
+							},
+							error: function(err) {
+								alert('评价失败！')
+							}
+						});
+					}
+				}
+			},
+			mounted: function() {
+
+			}
+		})
+	</script>
+
+</html>

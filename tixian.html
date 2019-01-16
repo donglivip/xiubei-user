@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/tixian.css" />
+		<script type="text/javascript" src="js/mui.js" ></script>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<link rel="stylesheet" href="css/mui.css" />
+	</head>
+
+	<body>
+		<div class="wrapper">
+			<div class="header">
+				<div class="header-aside mui-action-back">
+					<img src="img/zuo.png" />
+				</div>
+				<div class="header-text">提现</div>
+				<div class="header-aside" onclick="mui.openWindow('tixianjilu.html')">
+					<div class="header-news">提现记录</div>
+				</div>
+			</div>
+			<div class="main">
+				<div class="main-box" onclick="mui.openWindow('bangdingzhifubao.html')">
+					
+					<div class="main-text">支付宝</div>
+					<div class="main-text" id="zsid"></div>
+					<div class="main-text" id="zName"></div>
+					<img src="img/you.png" />
+				</div>
+				<div class="main-one">
+					<div class="one-text">提现金额</div>
+					<div class="one-box">
+						<div class="box-text">￥</div>
+						<input class="one-news" value="" placeholder="1000" type="number" style="border: 0;"/>
+					</div>
+				</div>
+				<div class="a-Put" style="font-size: 12px;text-align: center;">
+					<a>提现扣除手续费<span class="shou">0.1</span>%，平台服务费<span class="shou">4</span>%，每月可提现<span class="shou">一</span>次</a>
+				</div>
+				
+				<div class="main-two" style="margin-top: 10px;">确定提现</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+	<script type="text/javascript" src="js/url.js"></script>
+	<script>
+		var url_url = localStorage.getItem("http_url");
+		var zfb = localStorage.getItem('alipay');
+		
+		var shou = document.getElementsByClassName("shou");
+		
+			if (zfb==null||zfb=="null") {
+				$('#zsid').html("暂无设置账户");
+			}else{
+				$('#zsid').html(zfb);
+			}
+		
+		//获取提现规则
+		tixian();
+		
+		
+		document.addEventListener("binding",function(){
+			var zfb = localStorage.getItem('alipay');
+			$('#zsid').html(zfb);
+		})
+		
+		
+		
+		
+		//获取inpt属性
+		var money = $(".one-news").val();
+		
+		$(".main-two").click(function() {
+			var money = $(".one-news").val();
+			var userid = localStorage.getItem("us_user_id");
+			var pays = localStorage.getItem('alipay');
+			var re = money;
+			$.ajax({
+				type: "post",
+				url: url_url + "/user/cash",
+				async: true,
+				dataType: 'json',
+				data: {
+					'id': userid,
+					'money': money,
+					'remark': re
+				},
+				success: function(data) {
+					if(data.code == 200) {
+						mui.plusReady(function(){
+						 var mymoney=plus.webview.getWebviewById("mymoney");
+								mui.fire(mymoney,'mymoney',{});
+								mymoney.show('pop-in',300);
+								alert("提现成功")
+								
+						})
+						
+						
+					}
+					if(data.code == 301) {
+						alert("提现失败")
+					}
+				},
+				err: function(err) {
+					console.log(JSON.stringify(data));
+				}
+
+			})
+		})
+		
+		
+		
+		function tixian(){
+			$.ajax({
+				type: "get",
+				url: url_url + "/rules/infor",
+				async: true,
+				dataType: "json",
+				data: {
+
+				},
+				success: function(data) {
+					shou[0].innerHTML = data.ma_withdrawal_rules_service_charge;
+					shou[1].innerHTML = data.ma_withdrawal_rules_service;
+					shou[2].innerHTML = data.ma_withdrawal_rules_open_select;
+
+				}
+			});
+		}
+
+	</script>
+
+</html>

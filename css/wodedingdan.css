@@ -1,0 +1,30 @@
+*{margin: 0;padding: 0;}
+html,body,.wrapper{width: 100%;height: 100%;overflow: hidden;}
+.wrapper{background: #F5F5F5;}
+.header{height: .9rem;background: #2484E8 ;display: flex;align-items: center;justify-content: space-between;padding: 0 .24rem;}
+.header-aside{display: flex;align-items: center;justify-content: space-between;width: 1.2rem;}
+.header-aside img{height:0.38rem;}
+.header-content{font-size:.36rem;color: #FFFFFF ;}
+.header-text{font-size:.28rem;color: #FFFFFF;}
+.main-one{display: flex;align-items: center;justify-content: space-around;height:0.96rem;background: #FFFFFF;}
+.one-text{font-size:.28rem;color: #101010;padding: 10px 10px;font-size: 12px;border-bottom:2px solid #2484E8 ;}
+.one-txt{font-size:.28rem;color: #101010;padding: 10px 10px;border-bottom: 2px solid red;}
+.main-one div{font-size: 12px;}
+.main-two{height: 3.2rem;background: #FFFFFF;padding: .10rem .40rem;margin-top: 0.05rem;font-size: 0.28rem;}
+.two-top{display: flex;align-items: center;justify-content: space-between;height:.5rem;}
+.top-text{font-size: .2rem;color: #101010 ;font-size: 12px;}
+.two-bottom{display:flex;align-items: center;justify-content: flex-start;	}
+.bottom-left{display: flex;align-items: center;justify-content: center;width: 1.2rem;overflow: hidden;}
+.bottom-left img{margin-right: .20rem;max-height: 100%;max-width: 100%;}
+.bottom-right{width: 85%;padding: 3px 3px;}
+.right-text{font-size:.24rem;color:#101010 ;margin-bottom:0.1rem;margin-top:5px;}
+.right-text span{float:right}
+.bottom-box{align-items: center;justify-content: flex-start;}
+.bottom-text{font-size:.22rem;color: #101010 ;}
+.bottom-news{font-size:.22rem;color:#E51C23;}
+.bottom-word{font-size:.22rem;color: #101010;border: 1px solid #BBBBBB ;border-radius: .08rem ;height: .5rem;width:1.7rem;text-align: center;line-height: .5rem;margin-top: 3px;}
+/*我的订单*/
+.div_class{font-size: 12px;overflow:hidden;margin-top: 3px;}
+.id{border: 1px solid red;}
+/*直接下单*/
+

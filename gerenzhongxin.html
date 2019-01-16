@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/gerenzhongxin.css" />
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script type="text/javascript" src="js/mui.js"></script>
+		<link rel="stylesheet" href="css/mui.css" />
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="header">
+				<div class="header-aside">
+				</div>
+				<div class="header-content">个人中心</div>
+				<div class="header-aside">
+					<div class="header-text" id="shezhi">设置</div>
+				</div>
+			</div>
+			<div class="main">
+				<div class="main-one">
+					<img class="img_vip" id="vip_id" src="img/vip.png">
+					<div class="one-left" id="userImg">
+						<img src="img/386d42effa6f32130e69ff741f02fc42_58e89bee922a2.png" />
+					</div>
+					<div class="one-content">
+						<div class="one-text">昵称：<span class="name1">未设置</span></div>
+						<div class="one-news">17712036267</div>
+					</div>
+					<div class="border-top-right" id="member">
+						<img src="img/yu.png" />
+						<div>开通会员</div>
+					</div>
+				</div>
+				<div class="main-two">
+					<img src="img/qianbao.png" />
+					<div class="two-text">我的钱包</div>
+				</div>
+				<div class="main-two">
+					<img src="img/renzheng.png" />
+					<div class="two-text" >认证中心</div>
+				</div>
+				<div class="main-two">
+					<img src="img/bangzhu.png" />
+					<div class="two-text">帮助</div>
+				</div>
+				<div class="main-two">
+					<img src="img/guanyu.png" />
+					<div class="two-text">关于我们 </div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/url.js"></script>
+	<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+	<script type="text/javascript" src="js/dui.js" ></script>
+	<script>
+		var url_url = localStorage.getItem("http_url");
+		//获取放在缓存中的昵称
+		var name1 = localStorage.getItem('name');
+		//获取登录的手机号码
+		var ph = localStorage.getItem('phones');
+		
+		var userid=localStorage.getItem("us_user_id");
+		
+		var maintwo=document.getElementsByClassName("main-two");
+			
+		var member=document.getElementById("member");
+		
+		var shezhi=document.getElementById("shezhi");
+		
+		
+		
+		var neme=localStorage.getItem("name");
+		var phones=localStorage.getItem("phones");
+		var namee=document.getElementsByClassName("name1");
+		var one_news=document.getElementsByClassName("one-news");
+		var vip_id=document.getElementById("vip_id");
+		var ma_vip_id=localStorage.getItem("ma_vip_id");
+		
+			if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
+				vip_id.style.display="none";
+			}else{
+				vip_id.style.display="block";
+			}
+	
+		
+		
+		
+			namee[0].innerHTML=neme;
+			one_news[0].innerHTML=phones;
+			//接收通知
+			document.addEventListener("gerenzhongxin",function(){
+				
+				var vip_id=document.getElementById("vip_id");
+				var ma_vip_id=localStorage.getItem("ma_vip_id");
+				//会员图标显示
+				if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
+					vip_id.style.display="none";
+				}else{
+					vip_id.style.display="block";
+				}
+				var neme=localStorage.getItem("name");
+				var phones=localStorage.getItem("phones");
+				
+				var namee=document.getElementsByClassName("name1");
+				var one_news=document.getElementsByClassName("one-news");
+					namee[0].innerHTML=neme;
+					one_news[0].innerHTML=phones;
+			})
+		
+			//设置
+			shezhi.addEventListener("tap",function(){
+				var userid=localStorage.getItem("us_user_id");
+				if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
+					mui.toast("请登录");
+					dui.jump('denglu.html', 'denglu');
+					return;
+				}else{
+					dui.jump("shezhi.html","shezhi")
+				}	
+			})
+		
+			//开通会员
+			member.addEventListener("tap",function(){
+					dui.jump("membership.html","membership")
+			})
+			
+			//我的钱包
+			maintwo[0].addEventListener("tap",function(){
+					dui.jump("mymoney.html","mymoney")
+			})
+			
+			//认证中心
+			maintwo[1].addEventListener("tap",function(){
+					dui.jump("renzhenzhongxin.html","renzhenzhongxin")
+			})
+			
+			//帮助
+			maintwo[2].addEventListener("tap",function(){
+				
+					dui.jump("shiyongbangzhu.html","shiyongbangzhu")
+				
+			})
+			
+			
+			//关于我们
+			maintwo[3].addEventListener("tap",function(){
+				
+					dui.jump("guanyuwomen.html","guanyuwomen")
+				
+			})
+		
+		
+	</script>
+
+</html>

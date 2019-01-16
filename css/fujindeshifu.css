@@ -1,0 +1,136 @@
+*{
+	margin: 0;padding: 0;
+}
+
+.wrapper{
+	background: #F8F8F8;
+}
+.header{
+	background: #1296DB;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+	position: fixed;
+    width: 100%;
+    height: 50px;
+    text-align: center;	
+}
+
+.header-aside{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.header-aside img{
+	height: .38rem;
+}
+.header-text{
+	font-size:.36rem ;
+	color: #FFFFFF ;
+}
+.main-one{
+	height: 1.6rem;
+	background: #FFFFFF;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: .1rem;
+}
+.one-left{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.one-left img{
+	height: 1rem;
+	width: 1rem;
+	border-radius:100%;
+	margin: 0 .16rem;
+}
+.one-content{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 14%;
+}
+/*附近的师傅*/
+.one-box{
+	width:40%;
+}
+.one-text{
+	font-size: .28rem;
+	color: #101010 ;
+	margin-right: .1rem;
+	
+}
+.one-text{
+	width:70px;
+	display:inline-block;
+	overflow: hidden; 
+	white-space: nowrap; 
+	text-overflow: ellipsis;
+}
+
+.one-hezi{
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	margin: .06rem .1rem 0 0;
+}
+.one-hezi img{
+	height: .3rem;
+	
+}
+.hezi-text{
+	font-size: .24rem;
+	color: #101010 ;
+}
+.one-right{
+	margin-right:0rem;
+	height: 1.6rem;
+	width: 1.6rem;
+}
+.right-text{
+	font-size: .24rem;
+	color: #FFFFFF ;
+	background: #1296DB;
+	width: 1.4rem;
+	height: .6rem;
+	border-radius: .08rem;
+	text-align:center ;
+	line-height: .6rem;
+	margin-top: 10px;
+}
+.right-news{
+	font-size: .28rem;
+	color: #101010 ;
+	margin-top: .2rem;
+}
+
+.right-news{
+	width:100%;
+	overflow: hidden; 
+	white-space: nowrap; 
+	text-overflow: ellipsis;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

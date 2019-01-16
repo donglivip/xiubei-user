@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/bangzhu.css" />
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script type="text/javascript" src="js/mui.js"></script>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/base.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+			<h1 class="mui-title">首页</h1>
+			<span class="mui-pull-right aside-word">帮助中心</span>
+		</header>
+
+		<div class="mui-content wrapper">
+			<div class="main">
+				<div class="mui-slider main-one">
+					<div class="mui-slider-group">
+
+					</div>
+					<div class="mui-slider-indicator">
+						<div class="mui-indicator"></div>
+					</div>
+				</div>
+				<div class="main-two swiper-container">
+					<div class="swiper-wrapper">
+
+					</div>
+				</div>
+				<div class="main-box" style="overflow-x:hidden; overflow-y:scroll;">
+					<div class="main-three" id="list">
+						<!--<div class="three-box">
+							<div class="three-top">
+								<img src="img/gengduo.png" />
+							</div>
+							<div class="three-bottom">更多分类</div>
+						</div>-->
+					</div>
+				</div>
+
+				<div class="main-four">
+					<div class="four-left">
+						<div class="left-box cell">
+							<img src="img/yonghu.png" />
+							<div class="left-text">用户须知</div>
+						</div>
+
+						<div class="left-heai cell">
+							<img src="img/W5T4W8RA}2LUJ34XJ}PLZV9.png" />
+							<div class="left-text">附近师傅</div>
+						</div>
+					</div>
+					<div class="four-right">
+						<img src="img/fsga.jpg" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="js/mui.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/immersed.js"></script>
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+		<script>
+			mui.init();
+			//获取帮助元素
+			var Help = document.getElementsByClassName("aside-word");
+			var cell = document.getElementsByClassName("cell");
+			var userid = localStorage.getItem("us_user_id");
+			var url_url = localStorage.getItem("http_url");
+			var list = document.getElementById("list");
+			var btimg = document.getElementById("btnimg")
+			//公告
+			var gongg = document.getElementById("gongg");
+			//招商广告
+			var four = document.getElementsByClassName("four-right");
+			//更新当前用户坐标
+			sdsa();
+			document.addEventListener("bangzhu", function() {
+				sdsa();
+			})
+
+			function plusReady() {
+				plus.navigator.setStatusBarBackground('#2484E8');
+				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+					$.ajax({
+						type: "post",
+						url: localStorage.getItem('http_url') + "/api/svn/up2",
+						dataType: 'json',
+						success: function(res) {
+							console.log(JSON.stringify(res))
+							if(res.pb_svn_number != inf.version) {
+								//										版本更新
+								plus.nativeUI.showWaiting("下载更新资源包,请勿关闭页面！");
+								plus.downloader.createDownload(res.pb_svn_url, {
+									filename: "_doc/update/"
+								}, function(d, status) {
+									if(status == 200) {
+										plus.runtime.install(d.filename, {}, function() {
+											plus.nativeUI.closeWaiting();
+											plus.nativeUI.alert("应用资源更新完成！点击重启！", function() {
+												plus.runtime.restart();
+											});
+										}, function(e) {
+											plus.nativeUI.closeWaiting();
+											plus.nativeUI.alert("安装更新包失败[" + e.code + "]：" + e.message);
+										});
+									} else {
+										plus.nativeUI.closeWaiting();
+										plus.nativeUI.alert("下载更新包失败！");
+									}
+								}).start();
+							} else {
+
+							}
+						},
+						error: function(err) {
+							alert(JSON.stringify(localStorage.getItem('register_url') + "/svn/up"))
+						}
+					});
+				});
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+
+				function sdsa() {
+					//更新当前用户坐标
+					mui.plusReady(function() {
+						getGeocode();
+					})
+				}
+				//通过定位模块获取位置信息
+				function getGeocode() {
+					plus.geolocation.getCurrentPosition(geoInf, function(e) {
+						outSet("获取定位位置信息失败：" + e.message);
+					}, {
+						geocode: true
+					});
+				}
+				//更新当前用户坐标
+				function geoInf(position) {
+					var userid = localStorage.getItem("us_user_id");
+					if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
+						mui.toast("请登录");
+						dui.jump('denglu.html', 'denglu');
+						return;
+					}
+					var str = position.addresses;
+					var timeflag = position.timestamp; //获取到地理位置信息的时间戳；一个毫秒数；
+					var codns = position.coords; //获取地理坐标信息；
+					var lat = codns.latitude; //获取到当前位置的纬度；
+					var longt = codns.longitude; //获取到当前位置的经度
+					$.ajax({
+						type: "post",
+						url: url_url + "/user/coordinate",
+						dataType: 'json',
+						async: true,
+						data: {
+							'id': userid,
+							'x': longt,
+							'y': lat
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+
+						},
+						error: function(data) {
+							location.reload();
+						}
+					});
+				}
+				//帮助点击事件
+				Help[0].addEventListener("tap", function() {
+					dui.jump("shiyongbangzhu.html", "shiyongbangzhu")
+				})
+
+				//获取用户须知
+				cell[0].addEventListener("tap", function() {
+					dui.jump("yonghuxuzhi.html", "yonghuxuzhi")
+				})
+
+				//附近的师傅
+				cell[1].addEventListener("tap", function() {
+					dui.jump("fujindeshifu.html", "fujindeshifu")
+				})
+
+				//招商广告
+				four[0].addEventListener("tap", function() {
+					dui.jump("zhaoshangjiameng.html", "zhaoshangjiameng")
+				})
+				//获取banner图
+				banner();
+				//获取公共
+				bnner();
+				//获取分类
+				classification();
+
+				function classification() {
+					$.ajax({
+						type: "get",
+						url: url_url + "/client/stair",
+						dataType: 'json',
+						async: true,
+						data: {},
+						success: function(data) {
+							var tpml = ''
+
+							for(var a in data.data) {
+
+								if(data.data[a].pb_skill_type_one_icon == null) {
+									var t = '<img id="btnimg" src="img/4949.png" />'
+								} else {
+									var t = '<img src="' + url_url + data.data[a].pb_skill_type_one_icon + '" />'
+								}
+
+								if(a < 7) {
+									tpml += '<div class="three-box" data_id="' + data.data[a].pb_skill_type_one_id + '" data_name="' + data.data[a].pb_skill_type_one_title + '">' +
+										'<div class="three-top">' +
+										t +
+										'</div>' +
+										'<div class="three-bottom">' + data.data[a].pb_skill_type_one_title + '</div>' +
+										'</div>';
+								}
+
+							}
+
+							tpml += '<div class="three-box celll" data_id="' + data.data[a].pb_skill_type_one_id + '">' +
+								'<div class="three-top">' +
+								'<img src="img/gengduo.png" />' +
+								'</div>' +
+								'<div class="three-bottom">更多分类</div>' +
+								'</div>'
+
+							list.innerHTML += tpml;
+
+							feblei();
+
+						},
+						error: function(data) {
+							console.log(JSON.stringify(data));
+						}
+					});
+				}
+				//获取banner图,没做轮播
+				function banner() {
+					$.ajax({
+						type: "get",
+						url: url_url + "/client/banner",
+						dataType: 'json',
+						async: true,
+						data: {},
+						success: function(data) {
+							for(var i = 0; i < data.data.length; i++) {
+								$('.mui-slider-group').append(`
+								<div class="mui-slider-item">
+									<img src="${url_url + data.data[i].pb_banner_img_path}" />
+								</div>
+							`)
+							}
+							mui(".mui-slider").slider({
+								interval: 3000
+							})
+						},
+						error: function(data) {
+							console.log(JSON.stringify(data));
+						}
+					});
+				}
+				//获取公共，没做轮播
+				function bnner() {
+					$.ajax({
+						type: "get",
+						url: url_url + "/user/notice",
+						dataType: 'json',
+						async: true,
+						data: {},
+						success: function(data) {
+							for(var a in data) {
+								$('.swiper-wrapper').append(`
+								<div class="two-text swiper-slide" style='display:flex;align-items:center'>${data[a].pb_notice_content}</div>	
+							`)
+							}
+							var swiper = new Swiper('.swiper-container', {
+								direction: 'vertical',
+								loop: true,
+								autoplay: true
+							});
+
+						},
+						error: function(data) {
+							console.log(JSON.stringify(data));
+						}
+					});
+				};
+
+				function feblei() {
+					var cell = document.getElementsByClassName("three-box");
+					var celll = document.getElementsByClassName("celll");
+					for(var a = 0; a < cell.length; a++) {
+						if(a < 7) {
+							cell[a].addEventListener("tap", function() {
+
+								var userid = localStorage.getItem("us_user_id");
+								if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
+									mui.toast("请登录");
+									dui.jump('denglu.html', 'denglu');
+									return;
+								}
+
+								var oid_idd = this.getAttribute('data_id');
+								var data_name = this.getAttribute('data_name');
+
+								console.log(oid_idd);
+								console.log(data_name)
+
+								localStorage.setItem("oid_idd", oid_idd);
+								localStorage.setItem("data_name", data_name);
+
+								dui.jump("erjifenlie.html", "erjifenlie");
+
+							})
+						}
+					}
+					celll[0].addEventListener("tap", function() {
+						dui.jump("zonghefenlei.html", "zonghefenlei");
+					})
+
+				};
+		</script>
+	</body>
+
+</html>

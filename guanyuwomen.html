@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
+		<script type="text/javascript" src="js/mui.js"></script>
+		<link rel="stylesheet" href="css/mui.css" />
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<script src="js/rem.js"></script>
+		<style>
+			.diz{padding-top: 0.5rem;;}
+			.diz,.tab,.nav{padding-left:0.2rem;color:#000000;font-size:0.24rem;}
+			.im{width: 5.3rem;height: 3.1rem;margin-left: 0.3rem;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">关于我们</h1>
+		    </header>
+		    <div style="height: 1rem;"></div>
+		    <p class="diz">公司地址：内蒙古包头市一宫环岛恒通城尚城A座2002号</p>
+		    <p class="diz">联系电话：04725222222</p>
+		    <span class="diz" style="display: block;"></span>
+	</body>
+	<script type="text/javascript" src="js/mui.min.js" ></script>
+	<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+	<script>
+		var url_url=localStorage.getItem("http_url");
+		var diz = document.getElementsByClassName("diz");
+			di();
+
+			function di() {
+				$.ajax({
+					type: "get",
+					url: url_url + "/company/take",
+					dataType: 'json',
+					async: true,
+					success: function(data) {
+						diz[1].innerHTML = "公司地址:" + data.data.company_name
+						diz[2].innerHTML = "公司电话:" + data.data.company_phone
+						diz[0].innerHTML = data.data.company_text
+
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+
+					}
+				});
+			}
+		
+		
+		
+	</script>
+</html>

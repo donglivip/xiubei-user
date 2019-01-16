@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="js/mui.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/tuijianmingxi.css"/>
+	</head>
+	<style type="text/css">
+		.main{
+			height: calc(100% - .96rem);
+			overflow-y: scroll;
+		}
+	</style>
+	<body>
+		<div class="wrapper">
+			<!--头-->
+			<div class="header">
+				<div class="header-aside mui-action-back">
+					<img  src="img/zuo.png" />
+				</div>
+				<div class="header-text">明细</div>
+				<div class="header-aside">
+				</div>
+			</div>
+			<!--身体-->
+			<div class="main" id="list">
+				
+			</div>		
+		</div>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<script type="text/javascript" src="js/url.js" ></script>
+		<script>
+			var usreid=localStorage.getItem("us_user_id");
+			
+			var url_url=localStorage.getItem("http_url");
+			
+			var list=document.getElementById("list")
+			
+				$.ajax({
+					type: "post",
+					url: url_url + "/user/recommend",
+					dataType: 'json',
+					async: true,
+					data:{ 
+						'id':usreid
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						for (var a in data.data) {
+//							时间转换
+							var timestamp4 = new Date(data.data[a].us_bookkeeping_time);
+							//时间转换成功
+							var time=(timestamp4.toLocaleDateString().replace(/\//g, "-") + " " + timestamp4.toTimeString().substr(0, 8)); 
+							
+							var action = data.data[a].us_bookkeeping_action;
+							
+							if (action==0) {
+								var t='<div class="top-text">-'+data.data[a].us_bookkeeping_money+'</div>'
+							}else if(action==1){
+								var t='<div class="top-text">+'+data.data[a].us_bookkeeping_money+'</div>'
+							}
+							
+							var tpml='<div class="main-one">'
+										+'<div class="one-top">'
+											+'<div class="top-text">类型:'+data.data[a].us_bookkeeping_title+'</div>'
+											+t
+										+'</div>'
+										+'<div class="one-content">'
+											+'<div class="content-text">奖励时间'+time+'</div>'
+											+'<div class="bottom-news">当前余额:'+data.data[a].us_balance+'</div>'
+										+'</div>'
+										+'<div class="one-bottom">'
+											+'<div class="bottom-text">您推荐</div>'
+											+'<div class="bottom-news">'+data.data[a].us_bookkeeping_remark+'</div>'
+										+'</div>'					
+									+'</div>';
+									
+							list.innerHTML+=tpml;	
+						}
+						
+						
+						
+						
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					} 
+				}); 
+		</script>
+	</body>
+</html>

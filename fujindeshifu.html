@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/fujindeshifu.css"/>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<script type="text/javascript" src="js/mui.js" ></script>
+		<link rel="stylesheet" href="css/mui.css" />
+	</head>
+	
+	<body>		
+		<header class="mui-bar mui-bar-nav" style="background: #007AFF;">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #FFFFFF;"></a>
+		    <h1 class="mui-title" style="color: #FFFFFF;">附近的师傅</h1>
+		</header>
+		
+		<div class="mui-content">
+		    <div class="main" id="list">
+					<!--<div class="main-one">
+						<div class="one-left">
+							<img src="img/ftgjsd.jpg"/>
+						</div>
+						<div class="one-content">
+							<div class="one-text">黄师傅</div>
+						</div>
+						<div class="one-right">
+							<div class="right-text">已认证</div>
+							<div class="right-news">距离：200km</div>
+						</div>					
+					</div>-->
+			</div>
+		</div>
+		<script type="text/javascript" src="js/rem.js" ></script>
+		<script type="text/javascript" src="js/mui.js" ></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script type="text/javascript" src="../js/immersed.js" ></script>
+		<script type="text/javascript" src="js/url.js" ></script>
+		<script>
+			mui.init();
+			var url_url=localStorage.getItem("http_url");
+			var list=document.getElementById("list");
+			mui.plusReady(function(){
+				getGeocode();
+			})
+			//通过定位模块获取位置信息
+			function getGeocode(){
+				plus.geolocation.getCurrentPosition( geoInf, function ( e ) {
+					outSet( "获取定位位置信息失败："+e.message );
+				},{geocode:true});
+			}
+			function geoInf( position ) {
+				var str = position.addresses;
+				var timeflag = position.timestamp;//获取到地理位置信息的时间戳；一个毫秒数；
+				var codns = position.coords;//获取地理坐标信息；
+				var lat = codns.latitude;//获取到当前位置的纬度；
+				var longt = codns.longitude;//获取到当前位置的经度
+				localStorage.setItem('latt',lat);
+				localStorage.setItem('longtt',longt);
+			}
+			var la=localStorage.getItem('latt')
+			var lon=localStorage.getItem('longtt')
+			$.ajax({
+				type: "post",
+				url: url_url + "/user/distance",
+				dataType: 'json',
+				async: true,
+				data:{ 
+					'longitude':lon,
+					'latitude':la,
+					'distance':3000
+				},
+				success: function(data) {
+					console.log(JSON.stringify({ 
+					'longitude':lon,
+					'latitude':la,
+					'distance':3000
+				}))
+					if (data=='') {
+						return;
+					}
+					var	tpml=''
+					for (var a in data.data) {
+						if(data.data[a].busy==0&&data.data[a].us_user_state==1){
+							tpml+='<div class="main-one" data_id="data.data[a].us_user_id">'+
+									'<div class="one-left">'+
+										'<img src="'+url_url+''+data.data[a].us_user_head_portrait+'"/>'+
+									'</div>'+
+									'<div class="one-content">'+
+										'<div class="one-text">'+data.data[a].us_user_name+'</div>'+
+									'</div>'+
+									'<div class="one-box" >'+
+										'<div class="one-hezi">'+
+											'<div class="hezi-text">上门速度：</div>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+										'</div>'+
+										'<div class="one-hezi">'+
+											'<div class="hezi-text">上门速度：</div>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+										'</div>'+
+										'<div class="one-hezi">'+ 
+											'<div class="hezi-text">上门速度：</div>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+											'<img src="img/xingxin.png"/>'+
+										'</div>'+
+									'</div>'+
+									'<div class="one-right">'+
+										'<div class="right-text">已认证</div>'+
+										'<div class="right-news">距离:'+data.data[a].distance+'km</div>'+
+									'</div>'+				
+								'</div>'
+						}
+					}
+					list.innerHTML+=tpml;
+					xuaz();
+				},
+				error: function(data) {
+					console.log(JSON.stringify(data));
+				} 
+			}); 
+			function xuaz(){
+				var mainone=document.getElementsByClassName("main-one");
+				
+					for (var a=0;a<mainone.length;a++) {
+						mainone[a].addEventListener("tap",function(){
+							alert("暂未开通附近师傅下单功能");
+						})
+					}
+			};
+		</script>
+	</body>
+</html>

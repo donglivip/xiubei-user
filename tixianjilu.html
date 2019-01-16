@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head> 
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/tixianjilu.css"/>
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="header">
+				<div class="header-aside" onclick="mui.openWindow('tixian.html')">
+					<img src="img/zuo.png" />
+				</div>
+				<div class="header-text">提现</div>
+				<div class="header-aside">
+					
+				</div>
+			</div>
+			<div class="main" id="lisst">
+						
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/mui.min.js" ></script>
+	<script type="text/javascript" src="js/url.js" ></script>
+	<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+	<script>
+		var url_url = localStorage.getItem("http_url");
+		
+		var lisst=document.getElementById("lisst");
+		var userid=localStorage.getItem("us_user_id");
+		
+			console.log(url_url)
+			
+			console.log(userid)
+			
+			
+				$.ajax({
+					type: "get",
+					url: url_url + "/deposit/list",
+					dataType: 'json',
+					async: true,
+					data:{ 
+						'id':userid,
+						'page':1,
+						'limit':4
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data))
+						for(var a in data.data) {
+								if(data.data[a].pb_deposit_target == 0) {
+									var b = '<a class="Deled_span">支付宝</a>'
+								}
+				
+								if(data.data[a].pb_deposit_state == 0) {
+									var c = '<a class="Deled_span" style="color: #2484E8;">未审核</a>'
+								} else if(data.data[a].pb_deposit_state == 1) {
+									var c = '<a class="Deled_span" style="color: #2484E8;">提现成功</a>'
+								} else if(data.data[a].pb_deposit_state == 2) {
+									var c = '<a class="Deled_span" style="color: #2484E8;">拒绝提现</a>'
+								}
+				
+								var tpml = '<div class="Detailed">' +
+									'<div class="Detai">' +
+									'<span class="Detailed_span">到账金额：</span>' +
+									'<a class="Deled_span">' + '-' + data.data[a].pb_deposit_money + '</a>' +
+									'</div>' +
+									'<div class="Detai">' +
+									'<span class="Detailed_span">提现类型：</span>' +
+									b +
+									'</div>' +
+									'<div class="Detai">' +
+									'<span class="Detailed_span">提现账户：</span>' +
+									'<a class="Deled_span">' + data.data[a].us_user_money_pay_account + '</a>' +
+									'</div>' +
+									'<div class="Detai">' +
+									'<span class="Detailed_span">提现时间：</span>' +
+									'<a class="Deled_span">' + data.data[a].pb_deposit_create_time + '</a>' +
+									'</div>' +
+									'<div class="Detai">' +
+									'<span class="Detailed_span cell" >审核状态：</span>' +
+									c +
+									'</div>' +
+									'</div>';
+								lisst.innerHTML += tpml;
+							}
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					} 
+				}); 
+		
+		
+		
+	</script>
+</html>

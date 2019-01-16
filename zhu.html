@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/rem.js"></script>
+		<script type="text/javascript" src="js/mui.js"></script>
+		<link rel="stylesheet" href="css/mui.css" />
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<link rel="stylesheet" href="css/zhu.css" />
+		
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">注册</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="register">
+				<input type="text" name="" class="phone" placeholder="请输入手机号码" />
+				<button  class="addcode">获取验证码</button>
+			</div>
+
+			<div class="register">
+				<input type="number" name="" class="yan" placeholder="请输入验证码" />
+			</div>
+
+			<div class="register">
+				<input type="password" name="" class="password" placeholder="请设置登录密码" />
+			</div>
+
+			<div class="register-buoot">
+				<button id="btn">确认修改</button>
+			</div>
+
+		</div>
+
+	</body>
+	<script type="text/javascript" src="js/url.js"></script>
+	<script>
+		var url_url = localStorage.getItem("http_url");
+		//点击发送短信倒计时
+		$('.addcode').click(function() {
+
+			var ph = $('.phone').val();
+			//判断手机号是否合法
+			if(!(/^1[3|4|5|7|8|9][0-9]\d{4,8}$/.test(ph))) {
+				alert("不是完整的11位手机号或者正确的手机号前七位");
+				return false;
+			}
+
+			var i = 60;
+			setInterval(function() {
+				if(i != 1) {
+					i = i - 1;
+					$('.addcode').html(i + '秒');
+				} else {
+					$('.addcode').html('获取验证码');
+					return;
+				}
+			}, 1000)
+
+			//发送验证码
+			$.ajax({
+				type: "get",
+				url: url_url + "/message/SendSms",
+				async: true,
+				dataType: "JSON",
+				data: {
+					phone: $('.phone').val()
+				},
+				success: function(res) {
+					code = res
+					alert('短信已发送');
+				},
+				error: function(err) {
+					alert('发送验证码失败！')
+				}
+			});
+
+		})
+
+		$('#btn').click(function() {
+
+			//获取输入的验证码
+			var yans = $('.yan').val();
+			//获取输入的密码
+			var pass = $('.password').val();
+
+			//判断验证码非空
+			if(yans == '') {
+				alert('请输入验证码');
+				return false;
+			}
+			//密码
+			if(pass == '') {
+				alert('请输入密码');
+				return false;
+			};
+
+			//注册
+			$.ajax({
+				type: "get",
+				url: url_url + "/user/Register",
+				async: true,
+				dataType:"JSON",
+				data: {
+					Password: pass,
+					Account: $('.phone').val(),
+					code: code,
+					number: yans
+
+				},
+				success: function(res) {
+					if(res.code == 333){
+						alert('注册失败');
+						return false
+					}
+					if(res.code == 301) {
+						alert('验证码错误');
+					} 
+					if(res.code == 302) {
+						alert('用户已存在');
+					} 
+					if(res.code == 200){
+						alert('注册成功');
+						dui.jump("denglu.html", 'denglu');
+					}
+					
+				},
+				error: function(err) {
+					alert('错误')
+				}
+			});
+
+		})
+	</script>
+
+</html>

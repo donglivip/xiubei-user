@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/rem.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<style>
+			.bianhao {
+				font-size: 0.24rem;
+				padding-left: 0.2rem;
+			}
+			.time {
+				font-size: 0.24rem;
+				padding-right: 0.2rem;
+			}
+			.pingjia {
+				color: black;
+				float: left;
+				font-size: 0.24rem;
+				padding-left: 0.2rem;
+			}
+			.im {
+				float: left;
+				padding-left: 0.5rem;
+				padding-right: 0.5rem;
+			}
+			.im img{height: .5rem;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">我的评价</h1>
+		</header>
+		<div style="height:1.3rem"></div>
+		<div class="main">
+			
+		</div>
+	</body>
+	<script src="js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			$.ajax({
+				type:"get",
+				url:localStorage.getItem("http_url")+"/userOrder/OrderList",
+				async:true,
+				dataTYpe:'json',
+				data:{
+					userId:localStorage.getItem('us_user_id'),
+					getType:'isComment',
+					page:1
+				},
+				success:function(res){
+					for (var i in res.data) {
+						$('.main').append(`
+							<div style="padding:.2rem 0 .2rem;border-bottom:1px solid gainsboro;height:auto">
+								<span class="bianhao">订单编号：${res.data[i].pb_order_number}</span>
+								<span class="time">时间：${res.data[i].sm_time}</span>
+								<p style="height: 0.2rem;"></p>
+								<p class="pingjia">评价内容:</p>
+								<p class="im" onclick="playaudio('${res.data[i].pb_order_comment_frequency}')"><img src="img/yuyin.png" /></p>
+								<div style="height: 0.7rem;"></div>
+							</div>
+						`)
+					}
+				},
+				error:function(err){
+					console.log(JSON.stringify(err))
+				}
+			});
+		})
+		function playaudio(url){
+			var p = plus.audio.createPlayer(localStorage.getItem("http_url")+url);
+			p.play( function () {
+//				alert( "Audio play success!" );
+			}, function ( e ) {
+//				alert( "Audio play failed: " + e.message );
+			} );
+		}
+	</script>
+</html>

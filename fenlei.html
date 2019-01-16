@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/fenlei.css"/>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<script type="text/javascript" src="js/mui.js" ></script>
+	</head>
+	
+	<body>
+		<div class="wrapper">
+			<div class="header">
+				<div class="header-aside mui-action-back">
+					<img src="img/zuo.png"/>
+				</div>
+				<div class="header-text">选择下单方式</div>
+				<div class="header-aside"></div>
+			</div>
+			<div class="main">
+				<div class="main-one">使用说明：</div>
+				<ol class="main-two">
+					<li>通过地图直接选择附近的师傅</li> 
+					<li>可以在线直接下单等待师傅接单</li>
+					<li>不会下单可以直接打电话给客服，让客服为你安排师傅上门服务</li>
+				</ol>	
+				<div class="main-three">
+					<img src="img/ditu1.png"class="ditu"/>
+					<div class="three-text">地图找师傅</div>
+					<img src="img/you.png"class="youjiantou"/>
+				</div>
+				<div class="main-three">
+					<img src="img/xaidan1.png"class="ditu"/>
+					<div class="three-text">直接下单</div>
+					<img src="img/you.png"class="youjiantou"/>
+				</div>
+				<div class="main-three">
+					<img src="img/kefu1.png"class="ditu"/>
+					<div class="three-text">客服下单</div>
+					<img src="img/you.png"class="youjiantou"/>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+	<script type="text/javascript" src="js/dui.js" ></script>
+	<script type="text/javascript" src="js/url.js" ></script>
+	<script>
+		var main_three=document.getElementsByClassName("main-three");
+		var url_url=localStorage.getItem("http_url")
+		
+			//地图下单 
+			main_three[0].addEventListener("tap",function(){
+				var data_id_er=localStorage.getItem('data_id_er')
+				var data_name_er=localStorage.getItem('data_name_er')
+				var oid_idd=localStorage.getItem("oid_idd");
+				var data_name=localStorage.getItem("data_name");
+				var data_money_er=localStorage.getItem("data_money_er")
+				var phones=localStorage.getItem("phones");
+					console.log("一级ID："+oid_idd)
+					console.log("一级名称："+data_name)
+					console.log("二级ID："+data_id_er)
+					console.log("二级名称："+data_name_er)
+					console.log("手机号码："+phones)
+					console.log("手机号码："+data_money_er)
+				dui.jump("dituzhaoshifu.html","dituzhaoshifu")
+			})
+			
+			//直接下单
+			main_three[1].addEventListener("tap",function(){
+				var data_id_er=localStorage.getItem('data_id_er')
+				var data_name_er=localStorage.getItem('data_name_er')
+				var oid_idd=localStorage.getItem("oid_idd");
+				var data_name=localStorage.getItem("data_name");
+				var phones=localStorage.getItem("phones");
+				var data_money_er=localStorage.getItem("data_money_er")
+				
+					console.log("一级ID："+oid_idd)
+					console.log("一级名称："+data_name)
+					console.log("二级ID："+data_id_er)
+					console.log("二级名称："+data_name_er)
+					console.log("手机号码："+phones)
+					console.log("手机号码："+data_money_er)
+				dui.jump("xiadanyemian.html","xiadanyemian")
+			})
+			//电话下单
+			main_three[2].addEventListener("tap",function(){
+				$.ajax({
+					type: "get",
+					url: url_url + "/userOrder/Service",
+					dataType: 'json',
+					async: true,
+					data:{},
+					success: function(data) {
+						var btnArray=['拨打','取消'];
+						var phone=data.data.company_phone
+			            mui.confirm('是否拨打'+phone+'?','提示',btnArray,function(e){
+			                if(e.index == 0){
+			                    plus.device.dial(phone,false);
+			                }
+			            });
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+						
+					}
+				});	
+			})
+	</script>
+</html>

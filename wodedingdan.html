@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/wodedingdan.css" />
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<link rel="stylesheet" href="css/tab.css" />
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="header">
+				<div class="header-aside">
+					<!--<img src="img/zuo.png"/>-->
+				</div>
+				<div class="header-content">我的订单</div>
+				<div class="header-aside">
+					<div class="header-text" id="pingj">我的评价</div>
+				</div>
+			</div>
+			<div class="main" style="height: calc(100% - .9rem);">
+				<div class="main-one">
+					<div class="dsadsa one-text" id="unFinished">未接单</div>
+					<div class="dsadsa" id="isFinished">已接单</div>
+					<div class="dsadsa" id="isOver">已完成</div>
+					<div class="dsadsa" id="canceled">取消订单</div>
+				</div>
+				<div class="mui-content" id="list" style="height: calc(100% - .96rem);overflow-y: scroll;">
+
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script type="text/javascript" src="js/url.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<script>
+			mui.init();
+			var url_url = localStorage.getItem("http_url");
+			var cell = document.getElementsByClassName("dsadsa");
+			var use_id = localStorage.setItem("use_id", "unFinished");
+			var pingj = document.getElementById("pingj");
+			var list = document.getElementById("list");
+			//tab切换
+			$(function() {
+				$('.dsadsa').click(function() {
+					$(this).addClass('one-text').siblings().removeClass('one-text');
+					$('.dsadsa>div:eq(' + $(this).index() + ')').show().siblings().hide();
+					var oid_id = this.getAttribute('id');
+					localStorage.setItem("use_id", oid_id);
+					dianji();
+				})
+				$('.dsadsa').eq(0).click()
+			});
+			var userid = localStorage.getItem("us_user_id");
+			//我的评价
+			pingj.addEventListener("tap", function() {
+				dui.jump("wodepingjia.html", "wodepingjia");
+			})
+			document.addEventListener("wodedingdan", function() {
+				var use_id = '';
+				var use_id = localStorage.getItem("use_id");
+				var url_url = localStorage.getItem("http_url");
+				list.innerHTML = '';
+				dianji()
+			})
+
+			function dianji() {
+				var use_id = localStorage.getItem("use_id");
+				var url_url = localStorage.getItem("http_url");
+				list.innerHTML = '';
+				$.ajax({
+					type: "get",
+					url: url_url + "/userOrder/OrderList",
+					dataType: 'json',
+					async: true,
+					data: {
+						'userId': userid,
+						'getType': use_id,
+						'page': 1
+					},
+					success: function(data) {
+						for(var a in data.data) {
+							if(data.data[a].pb_order_state == "新单") {
+								var t = '<div class="right-text">订单状态:<span style="color: #FF0000;">等待接单</span></div>'
+							} else if(data.data[a].pb_order_state == "已取消") {
+								var t = '<div class="right-text">订单状态:<span style="color: #FF0000;">已取消</span></div>'
+							} else if(data.data[a].pb_order_state == "进行中") {
+								var t = '<div class="right-text">订单状态:<span style="color: #FF0000;">已接单</span></div>'
+							} else if(data.data[a].pb_order_state == "已完成") {
+								var t = '<div class="right-text">订单状态:<span style="color: #FF0000;">已完成</span></div>'
+							}else{
+								var t=''
+							}
+							var tpml = '<div class="main-two" data_id="' + data.data[a].pb_order_id + '"  state="' + data.data[a].pb_order_state + '">' +
+								'<div class="two-top">' +
+								'<div class="top-text">订单已生成</div>' +
+								'<div class="top-text">下单时间:' + data.data[a].sm_time + '</div>' +
+								'</div>' +
+								'<div class="two-bottom">' +
+								'<div class="bottom-left">' +
+								'<img src="' + url_url + data.data[a].thumbnail + '"/>' +
+								'</div>' +
+								'<div class="bottom-right">' +
+								'<div class="right-text">类型：<span>' + data.data[a].pb_skill_type_one_title + '->' + data.data[a].pb_skill_type_title + '</span></div>' +
+								'<div class="right-text">上门时间：<span>' + data.data[a].sm_time + '</span></div>' +
+								t +
+								'<div class="right-text" >订单地址：<span style="color: #FF0000;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;width:3.5rem;text-align:right;">' + data.data[a].pb_region_text + '</span></div>' +
+								'<div class="bottom-box">' +
+								'<div class="right-text">订单押金：<span style="color:#FF0000;">' + data.data[a].pb_order_deposit + '</span></div>' +
+								'</div>' +
+								'<div class="div_class">订单编号：<span style="float:right;">' + data.data[a].pb_order_number + '</div>' +
+								'</div>' +
+								'</div>' +
+								'</div>';
+							list.innerHTML += tpml;
+						}
+						//获取订单详情
+						Order();
+
+					},
+					error: function(data) {
+						//						console.log(JSON.stringify(data));
+					}
+
+				});
+			}
+
+			function Order() {
+				var cell = document.getElementsByClassName("main-two");
+				for(var a = 0; a < cell.length; a++) {
+					cell[a].addEventListener("tap", function() {
+						var oid_id = this.getAttribute('data_id');
+						var state = this.getAttribute('state');
+						localStorage.setItem("oid_id", oid_id)
+						localStorage.setItem("state", state)
+						mui.openWindow({
+							url:'dingdanxiangqing.html',
+							id:'dingdanxiangqing'
+						})
+					})
+				}
+
+			}
+		</script>
+	</body>
+
+</html>

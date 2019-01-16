@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/rem.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<link rel="stylesheet" href="css/xiadanyemian.css" />
+		<link rel="stylesheet" href="css/mui.picker.min.css" />
+		<style>
+			h5.mui-content-padded {
+				margin-left: 3px;
+				margin-top: 20px !important;
+			}
+			
+			h5.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			* {
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+			}
+		</style>
+	</head>
+
+	<body onresize="document.activeElement.scrollIntoView(false);">
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">直接下单</h1>
+		</header>
+		<div class="mui-content">
+			<div class="divyi">
+				<span class="font">服务类型：</span>
+				<span class="font  cell" style="margin-left:0.5rem;">空调维修>下水管道维修</span>
+			</div>
+			<div class="divyi flex">
+				<span class="font">上门时间：</span>
+				<input class="inpi" id='demo1' data-options='{}' style="border: 0px;" placeholder="选择上门时间" type="text" readonly="readonly" value="">
+			</div>
+			<div class="divyi flex">
+				<span class="font">联系人：</span>
+				<input class="inpi" style="border: 0px;" placeholder="请输入姓名" type="text" value="">
+			</div>
+			<div class="divyi flex">
+				<span class="font">手机号码：</span>
+				<input class="inpi cell" style="border: 0px;" placeholder="125478963789" type="tel" value="">
+			</div>
+			<div class="divyi flex">
+				<span class="font">下单类型：</span>
+				<input class="inpi " style="border: 0px;" type="text" value="直接下单" readonly="readonly">
+			</div>
+			<div class="divyi flex">
+				<span class="font">下单押金：</span>
+				<input class="inpi  cell" style="border: 0px;" value="50元" type="text" readonly="readonly">
+			</div>
+			<div class="divyi flex">
+				<span class="font">当前位置：</span>
+				<input class="ini cell" style="border: 0px;" type="text" placeholder="请选择当前地址" readonly="readonly">
+				<button class="btno" id="genghuan">选择位置</button>
+			</div>
+			<div class="divyi flex">
+				<span class="font">详细地址：</span>
+				<input class="inpi cell" id="dsads" style="border: 0px;" type="text" placeholder="请输入详细地址" value="">
+			</div>
+			<div class="divyi flex">
+				<span class="font">备注信息：</span>
+				<textarea class="cell" id="dsadfsds" style="width: 75%;height: 35px;line-height:10px;margin-top:13px;font-size: 12px;border: 0;" placeholder="请输入备注信息" value=" "></textarea>
+			</div>
+			<div class="divyi" style="height: 7.9rem;">
+				<!--<p>录制视频</p>
+				<p style="color:red;padding-left: 0.3rem;">使用说明</p>
+				<P style="color:red;width:100%;padding-left: 0.3rem;">如果您无法简结的表达您的想法，请拍摄视频告知或者照片告知情况给师傅</P>
+				<img class="kuang" src="img/xiangji.png" />-->
+				<p>拍摄照片</p>
+				<div class="flex">
+					<img class="kuang" src="img/xiangji.png" id="record" />
+				</div>
+			</div>
+		</div>
+		<div class="button_cal">
+			<button class="button" id="queren">确定下单</button>
+		</div>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<script type="text/javascript" src="js/mui.picker.min.js"></script>
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script>
+			var url_url = localStorage.getItem("http_url");
+			var data_id_er = localStorage.getItem('data_id_er')
+			var data_name_er = localStorage.getItem('data_name_er')
+			var oid_idd = localStorage.getItem("oid_idd");
+			var data_name = localStorage.getItem("data_name");
+			var data_money_er = localStorage.getItem("data_money_er")
+			var phones = localStorage.getItem("phones");
+			var cell = document.getElementsByClassName("cell");
+			var inpi = document.getElementsByClassName("inpi");
+			cell[0].innerHTML = data_name + ">" + data_name_er;
+			cell[1].value = phones;
+			cell[2].value = data_money_er;
+			document.addEventListener("xiadanyemian", function() {
+				var dizhi = localStorage.getItem("dizhi");
+				var district = localStorage.getItem("district");
+				var Provinces = localStorage.getItem("Provinces");
+				cell[3].value = Provinces;
+				cell[4].value = dizhi;
+			})
+			$("#genghuan").click(function() {
+				dui.jump("genghuanweizhi.html", "genghuanweizhi");
+			});
+			$('#record').click(function() {
+				imgclick()
+			})
+			var cmr = null,
+				myaudio = null;
+
+			function imgclick(imid, inid) {
+				var that = this
+				var btnArray = [{
+					title: "照相机"
+				}, {
+					title: "相册"
+				}]; //选择按钮  1 2 3
+				plus.nativeUI.actionSheet({
+						title: "请选择",
+						cancel: "取消", // 0
+						buttons: btnArray
+					},
+					function(e) {
+						var index = e.index; // 
+						switch(index) {
+							case 1:
+								//写自己的逻辑
+								camera();
+								break;
+							case 2:
+								album();
+								break;
+						}
+					});
+			}
+
+			function camera() {
+				var that = this
+				var cmr = plus.camera.getCamera();
+				cmr.captureImage(function(p) {
+					//成功
+					plus.io.resolveLocalFileSystemURL(p, function(entry) {
+						var img_name = entry.name; //获得图片名称
+						var img_path = entry.toLocalURL(); //获得图片路径
+						$('#record').attr('src', img_path);
+						upload_img(img_path);
+					}, function(e) {
+						alert("读取拍照文件错误：" + e.message);
+					});
+
+				}, function(e) {
+					alert("失败：" + e.message);
+				}, {
+					filename: '_doc/camera/',
+					index: 1
+				});
+			}
+
+			function album() {
+				var that = this
+				plus.gallery.pick(function(path) {
+					upload_img(path);
+					$('#record').attr('src', path);
+				}, function(e) {
+					alert("取消选择图片");
+				}, {
+					filter: "image"
+				});
+			}
+
+			function upload_img(p) {
+				var thats = this;
+				var img = new Image();
+				img.src = p; // 传过来的图片路径在这里用。
+				img.onload = function() {
+					var that = this;
+					//生成比例 
+					var w = that.width,
+						h = that.height,
+						scale = w / h;
+					w = 280 || w; //480  你想压缩到多大，改这里
+					h = w / scale;
+					//生成canvas
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					$(canvas).attr({
+						width: w,
+						height: h
+					});
+					ctx.drawImage(that, 0, 0, w, h);
+					$.ajax({
+						type: "post",
+						url: localStorage.getItem('http_url') + '/user/shift',
+						dataType: 'json',
+						data: {
+							image: canvas.toDataURL('image/jpeg', 1 || 0.8)
+						},
+						success: function(res) {
+							myaudio = res.data
+						}
+					});
+				}
+			}
+			//选择时间
+			(function($) {
+				$.init();
+				var result = $('#btn');
+				var btns = $('#demo1');
+				btns.each(function(i, btn) {
+					btn.addEventListener('tap', function() {
+						var _self = this;
+						if(_self.picker) {
+							_self.picker.show(function(rs) {
+								inpi[0].value = rs.text;
+							});
+						} else {
+							var optionsJson = this.getAttribute('data-options') || '{}';
+							var options = JSON.parse(optionsJson);
+							var id = this.getAttribute('id');
+							_self.picker = new $.DtPicker(options);
+							_self.picker.show(function(rs) {
+								inpi[0].value = rs.text;
+							});
+						}
+					}, false);
+				});
+			})(mui);
+			$("#queren").click(function() {
+				function plusReady() {
+					plus.geolocation.getCurrentPosition(function(p) {
+						var us_user_id = localStorage.getItem("us_user_id");
+						var data_id_er = localStorage.getItem('data_id_er')
+						var district = localStorage.getItem("district");
+						var Provinces = localStorage.getItem("Provinces");
+						var phones = localStorage.getItem("phones");
+						//用户名称
+						var name = inpi[1].value;
+						//详细地址
+						var xiangxi = inpi[5].value;
+						//备注信息
+						var Remarks = cell[5].value;
+						//选择时间
+						var time = inpi[0].value;
+						if(name == '') {
+							alert("请输入联系人姓名");
+							return;
+						}
+						if(time == '') {
+							alert("请选择一个上门时间！");
+							return;
+						}
+						if(xiangxi == '') {
+							alert("请填写所在区域！");
+							return;
+						}
+						var ajaxjson = {
+							'userId': us_user_id, //用户ID
+							'typeId': data_id_er, //二级ID
+							'region': Provinces, //地区省市县
+							'detailed': xiangxi, //详细地址
+							'telName': name, //联系人
+							'phoneNumber': phones, //手机号
+							'remark': Remarks, //备注
+							'openDoorTime': time, //时间
+							'video': '', //视频
+							'img': JSON.stringify([myaudio]), //图片
+							target_postion_x: p.coords.longitude,
+							target_postion_y: p.coords.latitude
+						}
+						console.log(JSON.stringify(ajaxjson))
+						//提交订单
+						$.ajax({
+							type: "post",
+							url: url_url + "/userOrder/Overbooking",
+							async: true,
+							dataType: "JSON",
+							data: ajaxjson,
+							success: function(data) {
+								if(data.code == 200) {
+									plus.nativeUI.toast("提交订单成功！等待接单")
+									mui.openWindow({
+										url: './index.html',
+										id: 'index'
+									})
+								} else if(data.code == 301) {
+									mui.toast("账户余额不足！请充值！")
+									dui.jump("wodedingdan.html", "wodedingdan");
+									return;
+								} else {
+									mui.toast("提交失败!请联系管理员!")
+								}
+							},
+							error: function(data) {
+								console.log(JSON.stringify(data));
+							}
+						});
+					}, function(e) {
+						that.city = '获取失败'
+					});
+
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+			});
+			mui.plusReady(function() {
+				//设置bottom绝对位置
+				document.getElementById('queren').style.top = (plus.display.resolutionHeight - 45) + "px";
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<script src="https://webapi.amap.com/maps?v=1.4.8&key=86a658389dfffb481baf968c8e1a843b"></script>
+	</head>
+	<style type="text/css">
+		html,
+		body,
+		#container {
+			height: 100%;
+		}
+	</style>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">地图选择师傅</h1>
+		</header>
+		<div class="mui-content" id="container">
+
+		</div>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<script>
+			$(function() {
+				var map = null,
+					sdata=null;
+
+				function plusReady() {
+					plus.nativeUI.showWaiting('地图加载中。。。')
+					plus.geolocation.getCurrentPosition(function(p) {
+						map = new AMap.Map('container', {
+							resizeEnable: true,
+							rotateEnable: true,
+							pitchEnable: true,
+							zoom: 17,
+							pitch: 50,
+							rotation: -15,
+							viewMode: '3D',
+							buildingAnimation: true,
+							center: [p.coords.longitude, p.coords.latitude],
+							layers: [
+								new AMap.TileLayer({}),
+								new AMap.Buildings({
+									zIndex: 100,
+									merge: false,
+									sort: false,
+									zooms: [17, 20]
+								})
+							]
+						});
+						//添加点标记，并使用自己的icon
+						var marker = new AMap.Marker({
+							map: map,
+							position: [p.coords.longitude, p.coords.latitude],
+							icon: new AMap.Icon({
+								size: new AMap.Size(27, 33),
+								image: "./img/pin copy.png",
+							})
+						});
+						//						获取附近师傅
+						$.ajax({
+							type: "get",
+							url: localStorage.getItem('http_url') + "/userOrder/MasterOnMap",
+							dataType: 'json',
+							data: {
+								x: p.coords.longitude,
+								y: p.coords.latitude,
+								type: localStorage.getItem('data_id_er')
+							},
+							success: function(res) {
+								sdata=res.data
+								console.log(JSON.stringify(sdata))
+								for(var i = 0; i < res.data.length; i++) {
+									addmarker(res.data[i].us_user_x,res.data[i].us_user_y,i)
+								}
+								plus.nativeUI.closeWaiting()
+							},
+							error: function(err) {
+								console.log(JSON.stringify(err))
+							}
+						});
+					}, function(e) {
+						alert("请检查手机网络或者位置服务开关是否打开后重试！")
+					});
+
+					function addmarker(lat, lng, id) {
+						var that = this
+						var marker = new AMap.Marker({
+							position: new AMap.LngLat(lat, lng),
+							offset: new AMap.Pixel(-10, -10),
+							icon: './img/Group.png', // 添加 Icon 图标 URL
+							title: id
+						});
+						map.add(marker);
+						marker.on('click', function(MapsEvent) {
+							localStorage.setItem('pid',JSON.stringify(sdata[marker.getTitle()]))
+							mui.openWindow({
+								url:'./dituxiadan.html',
+								id:'dituxiadan'
+							})
+						})
+					}
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+			})
+		</script>
+	</body>
+
+</html>

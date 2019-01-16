@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/rem.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<link rel="stylesheet" href="css/tixian.css" />
+		<style>
+			.chong {
+				font-size: 0.28rem;
+			}
+			
+			.pice {
+				font-size: 0.96rem;
+				padding-top: 0.8rem;
+				padding-bottom: 0.8rem;
+			}
+			
+			.liu {
+				padding-left: 0.8rem;
+			}
+			
+			#butto {
+				border-radius: 0rem;
+			}
+			
+			.buoo {
+				padding-left: 0.1rem;
+				padding-right: 0.1rem;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">充值</h1>
+		</header>
+		<div class="mui-content Recharge">
+			<div class="one-text">充值金额</div>
+			<div class="one-box">
+				<div class="box-text">￥</div>
+				<input class="one-news" value="" placeholder="1000" type="number" style="border: 0;" />
+			</div>
+		</div>
+		<div class="button">
+			<button id="butto" class="apay">支付宝充值</button>
+		</div>
+		<div class="button">
+			<button id="butto" class="wpay">微信充值</button>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+	<script>
+		var url_url = localStorage.getItem("http_url");
+		$('.wpay').click(function() {
+			var channels = []
+			plus.payment.getChannels(function(channels) {
+				channels = channels
+				$.ajax({
+					type: "post",
+					url: url_url + "/Wxpay/Wxapp",
+					data: {
+						id: localStorage.getItem('us_user_id'),
+						money: $('.one-news').val() * 100,
+						title: '用户充值',
+						code: 1
+					},
+					success: function(data) {
+						plus.payment.request(channels[1], data, function() {
+								var mymoney = plus.webview.getWebviewById("mymoney");
+								mui.fire(mymoney, 'mymoney', {});
+								mui.toast('支付成功!');
+								mymoney.show('pop-in', 300);
+							},
+							function(err) {
+								mui.toast('支付失败!');
+							});
+					},
+					error: function(error) {
+						console.log(JSON.stringify(url_url + " /Wxpay/Wxapp"));
+						console.log(JSON.stringify(error));
+					}
+				});
+			}, function(e) {
+				alert('获取支付通道失败' + e.message);
+			});
+
+		})
+		$('.apay').click(function() {
+			//获取输入的充值金额
+			var pays = $('.one-news').val();
+			if(pays == "") {
+				alert("请输入充值金额！")
+				return;
+			}
+			var userid = localStorage.getItem('us_user_id');
+			window.selectpay = 'alipay';
+			var Determine = '在线充值';
+
+			function opennew(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+
+			}
+			pay();
+
+			function pay() {
+				plus.payment.getChannels(function(channels) {
+					for(var i in channels) {
+						if(channels[i].id == window.selectpay) {
+							channel = channels[i];
+							return true;
+						}
+					}
+				}, function(e) {
+					alert('获取支付通道失败' + e.message);
+				});
+				if(window.selectpay == 'alipay') {
+					$.ajax({
+						type: "post",
+						url: url_url + "/recharge/Transaction",
+						async: false,
+						data: {
+							id: userid,
+							total_amount: pays,
+							subject: Determine
+						},
+						success: function(data) {
+							var res_str = data;
+							console.log(res_str);
+							plus.payment.request(channel, res_str, yes, no);
+						},
+						error: function(error) {
+							console.log(JSON.stringify(error));
+						}
+					});
+				}
+			}
+
+			function yes(data) {
+				mui.plusReady(function() {
+					var mymoney = plus.webview.getWebviewById("mymoney");
+					mui.fire(mymoney, 'mymoney', {});
+					mui.toast('支付成功!');
+					mymoney.show('pop-in', 300);
+				})
+			}
+
+			function no(data) {
+				mui.toast('支付失败!');
+			}
+
+		})
+	</script>
+
+</html>

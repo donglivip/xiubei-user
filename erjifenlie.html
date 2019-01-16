@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/rem.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<style>
+			.dsaaa img{
+				width: 3rem;height: 3rem;
+			}
+			.dsaa_span{overflow: hidden;padding:0px 9px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">二级分类</h1>
+		</header>
+		<div style="margin-top: 5px;"></div>
+		<div class="mui-content">
+    		<div class="dsadsa" id="list">
+	 			<div class="wwwd">
+	 				<div class="dsaaa">
+		 				<img  src="img/Back.png" />	
+		 			</div>
+		 			<div class="dsaaa">
+		 				<div class="dsaa_span">
+		 					<span style="float:left; white-space: nowrap; text-overflow: ellipsis;width:100px;text-align: left;">分类一发单时间红烧豆腐</span>
+		 					<span style="float:right;">下单押金</span>
+		 				</div>
+		 			</div>
+		 		</div>
+	 		</div>
+		</div>
+		
+		 <script type="text/javascript" src="js/mui.min.js" ></script>
+		 <script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		 <script type="text/javascript" src="js/dui.js" ></script>
+		 <script type="text/javascript" src="js/url.js" ></script>
+		 <script>
+		 	var url_url=localStorage.getItem("http_url");
+		 	var oid_idd=localStorage.getItem("oid_idd");
+		 	var list=document.getElementById("list")
+		 		list.innerHTML="";
+		 		$.ajax({
+					type: "get",
+					url: url_url + "/client/vfp",
+					dataType: 'json',
+					async: true,
+					data:{ 
+						'id':oid_idd,
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						var tpml='';
+						for (var a in data.data) {
+							if (data.data[a].pb_skill_type_two_icon=='null'||data.data[a].pb_skill_type_two_icon==null) {
+								var r='<img src="img/4949.png" />'
+							}else{
+								var r='<img src="'+url_url+data.data[a].pb_skill_type_two_icon+'" />'
+							}
+							
+							tpml+='<div class="wwwd" data_id_er="'+data.data[a].pb_skill_type_two_id+'" data_name_er="'+data.data[a].pb_skill_type_title+'"  data_money_er="'+data.data[a].pb_skill_type_two_money+'">'
+						 				+'<div class="dsaaa">'
+							 				+r
+							 			+'</div>'
+							 			+'<div class="dsaaa">'
+							 					+'<div class="dsaa_span">'
+								 					+'<span style="float:left;overflow:hidden;white-space: nowrap; text-overflow:ellipsis;width:80px;text-align: left;">'+data.data[a].pb_skill_type_title+'</span>'
+								 					+'<span style="float:right;">下单押金'+data.data[a].pb_skill_type_two_money+'</span>'
+								 				+'</div>'
+							 			+'</div>'
+							 		+'</div>';
+						}
+//					
+						list.innerHTML="";	
+						list.innerHTML=tpml;	
+						//分类下单
+						ddsadsa();
+						
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					} 
+				}); 
+				function ddsadsa(){
+					var wwwd=document.getElementsByClassName("wwwd");
+						for (var a=0;a<wwwd.length;a++) {
+							wwwd[a].addEventListener("tap",function(){
+								var data_id_er=this.getAttribute('data_id_er');
+								var data_name_er=this.getAttribute('data_name_er');
+								var data_money_er=this.getAttribute('data_money_er');
+									localStorage.setItem('data_id_er',data_id_er)
+									localStorage.setItem('data_name_er',data_name_er)
+									localStorage.setItem('data_money_er',data_money_er)
+									console.log(data_id_er);
+									console.log(data_name_er);
+									console.log(data_money_er)
+								dui.jump("fenlei.html","fenlei");
+							})
+						}
+					
+				};
+		 </script>
+	</body>
+</html>

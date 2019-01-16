@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/shiyongbangzhu.css"/>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<script type="text/javascript" src="js/mui.js" ></script>
+		<script type="text/javascript" src="js/url.js" ></script>
+		<script type="text/javascript" src="js/rem.js" ></script>
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="header">
+				<div class="header-aside mui-action-back">
+					<img src="img/zuo.png" class="mui-action-back"/>
+				</div>
+				<div class="header-text">使用帮助</div>
+				<div class="header-aside">					
+				</div>
+			</div>
+			<div class="main" id="list">
+				
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script>
+			
+			var main=document.getElementsByClassName("main-one");
+			
+			var url_url=localStorage.getItem("http_url");
+			
+			bangzhu();
+			
+			function bangzhu(){
+				$.ajax({
+					type: "get",
+					url: url_url + "/user/help",
+					dataType: 'json',
+					data:{},
+					async: true,
+					success: function(data) {
+						
+					
+						if (data=="") {
+							return;
+						}
+						
+						for (var a in data) {
+							var tpml = '<div class="main-one" title="'+data[a].pb_common_problems_title+'" problems="'+data[a].pb_common_problems_body+'" data_id="'+data[a].pb_common_problems_id+'"><span style="margin-left: 0.2rem;">'+data[a].pb_common_problems_title+'</span></div>';
+							
+							list.innerHTML+=tpml;	
+						}
+						
+						
+						cell();
+						
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					}
+				});
+			}
+			
+			
+			function cell(){
+				
+				var cell = document.getElementsByClassName("main-one");
+				
+				for(var a = 0; a < cell.length; a++) {
+					
+					cell[a].addEventListener("tap", function() {
+						
+						var oid_id = this.getAttribute('data_id');
+						var title = this.getAttribute('title');
+						var problems = this.getAttribute('problems');
+						localStorage.setItem("pb_issue_id", oid_id);
+						localStorage.setItem("title_ti", title);
+						localStorage.setItem("body_bo", problems);
+						dui.jump("xinxizhanshi.html", "xinxizhanshi");
+
+					})
+				}
+				
+				
+			};
+			
+			
+			
+		</script>
+	</body>
+</html>

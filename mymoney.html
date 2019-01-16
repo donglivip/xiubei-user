@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+ 
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="js/mui.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script type="text/javascript" src="js/dui.js" ></script>
+		<style>
+			.left {width: 50%;float:left;}
+			.wallet {padding-top: 0.5rem;}
+			.money {color: black;}
+			.wallet-li {display: flex;}
+			.font {margin-left: 0.5rem;margin-top:8px;}
+			.wallet-li img{width: 35px;height: 35px;}
+			.left img{width: 30px; height: 30px;}
+		</style>
+	</head> 
+	<body>
+		<!--onclick="mui.openWindow('gerenzhongxin.html')"-->
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的钱包</h1>
+			<span class="mui-pull-right" id="forward">推荐明细</span>
+		</header>
+
+		<div class="mui-content sharea">
+			
+			<div class="wallet">
+				<div class="left">
+					<img src="img/qianbao1.png" />
+					<p class="money">钱包余额</p>
+					<p class="money" id="money">0.00</p>
+				</div>
+				<div class="left">
+					<img src="img/tuijian1.png" />
+					<p class="money">推荐额度</p>
+					<p class="money" id="btnon">￥0.00</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="wallet-ul">
+				<ul class="mui-table-view">
+					<li class="wallet-li" style="display:flex;)">
+						<img src="img/chongzhi.png" />
+						<a class="font">
+							充值
+						</a>
+					</li>
+					<li class="wallet-li">
+						<img src="img/tixian.png" />
+						<a class="font">
+							提现
+						</a>
+					</li>
+					<li class="wallet-li">
+						<img src="img/mingxi.png" />
+						<a class="font">
+							明细
+						</a>
+					</li>
+				</ul>
+		</div>
+ 
+
+	</body>
+	<script type="text/javascript" src="js/mui.min.js" ></script>
+	<script type="text/javascript" src="js/dui.js" ></script>
+	<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+	<script type="text/javascript" src="js/url.js" ></script>
+	
+	<script>
+		var url_url = localStorage.getItem("http_url");
+		var walletli=document.getElementsByClassName("wallet-li");	
+		var a_back=document.getElementById("a_back");
+		var uresid=localStorage.getItem("us_user_id");
+		var btnon=document.getElementById("btnon");
+		var money=localStorage.getItem("money");
+		var forward=document.getElementById("forward");
+//			获取钱包余额
+			document.addEventListener("mymoney",function(){
+				qianbao()
+			})
+			//余额
+			qianbao();
+			//推荐额度
+			quota();
+			//充值
+			walletli[0].addEventListener("tap",function(){
+				dui.jump("mymoneychongzhi.html","mymoneychongzhi");
+			})
+			//提现
+			walletli[1].addEventListener("tap",function(){
+				dui.jump("tixian.html","tixian");
+			})
+			//明细
+			walletli[2].addEventListener("tap",function(){
+				dui.jump("mingxi.html","mingxi");
+			})
+			//forward
+			forward.addEventListener("tap",function(){
+				dui.jump("tuijianmingxi.html","tuijianmingxi");
+			})
+			//推荐额度
+			function quota(){
+				$.ajax({
+					type: "post",
+					url: url_url + "/user/recommend",
+					dataType: 'json',
+					async: true,
+					data:{ 
+						'id':uresid
+					},
+					success: function(data) {
+						for(var a in data.data){
+							btnon.innerHTML=data.data[0].us_bookkeeping_money;
+						}	
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					} 
+				}); 
+			}
+			//查询钱包明细
+			function qianbao(){
+				$.ajax({
+					type: "post",
+					url: url_url + "/user/place",
+					dataType: 'json',
+					async: true,
+					data:{ 
+						'id':uresid
+					},
+					success: function(data) {
+						$("#money").html(data.data.us_user_money_balance);
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					} 
+				}); 
+			}
+			
+			
+			
+		
+	</script>
+</html>

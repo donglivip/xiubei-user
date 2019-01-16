@@ -1,0 +1,71 @@
+*{
+	margin: 0;padding: 0;
+}
+html,body,.wrapper{width: 100%;height: 100%;overflow: hidden;}
+.wrapper{
+	background: #F5F5F5  ;
+}
+.header{
+	height: .96rem;
+	background: #2484E8;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 .24rem;
+}
+.header-aside{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 1.2rem;
+}
+.header-aside img{
+	height: .38rem;
+}
+.header-text{
+	font-size:.36rem ;
+	color: #FFFFFF ;
+}
+.main-one{
+	height: 1.7rem;
+	background: #FFFFFF;
+	
+}
+.one-top{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: .24rem;
+}
+.top-text{
+	font-size: .36rem;
+	color: #101010 ;
+}
+.one-bottom{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 .24rem;
+}
+.bottom-text{
+	font-size: .28rem;
+	color: #101010 ;
+}
+
+
+
+
+
+
+.Put{background: #FFFFFF;padding: 0.2rem;height: 2.6rem;}
+.Put h1{height: 1rem;}
+.Put a{top: 0.1rem;color: #000000;}
+.Put-a {background: #FFFFFF;margin-top: 0.02rem;height: 0.9rem;line-height: 0.5rem;font-size: 0.28rem;padding:  0.2rem 0.4rem;color: #000000;}
+.Put-a a{color: #000000;}
+.Put-a a input{border: 0rem;color: #D8D8D8;float: right;}
+.a-Put a{font-size: 0.22rem;color: #000000;padding: 0.2rem;}
+.Put-h1{text-align: center;margin-top: 1rem;}
+.Put-h1 span{font-size:0.24rem;}
+.Put input{padding: 0rem 0rem;border-bottom:0.02rem;border: 0rem;}
+.Detailed{padding: 0.24rem 0.24rem;background: #FFFFFF;margin-top: 2px;}
+.Detailed_span{float:left;}

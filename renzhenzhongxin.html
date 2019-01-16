@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<link rel="stylesheet" href="css/base.css" />
+		<script type="text/javascript" src="js/rem.js"></script>
+	</head>
+	<style>
+		.main-Photo {
+			height: 3.6rem;
+			background: #FFFFFF;
+			border-bottom: 1px solid #F3F3F3;
+		}
+		
+		.main-upload {
+			font-size: .24rem;
+			color: #333333;
+			padding: .24rem 0 .24rem .24rem;
+		}
+		
+		.main-Certificates {
+			display: flex;
+			align-items: center;
+			justify-content: space-around;
+		}
+		
+		.main-Certificates img {
+			width: 3.3rem;
+			height: 2.46rem;
+			padding: 0 .24rem .24rem .24rem;
+		}
+	</style>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">实名认证</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-input-group tica">
+				<div class="mui-input-row">
+					<label>姓名</label>
+					<input type="text" id="name" class="mui-input-clear" placeholder="请输入姓名">
+				</div>
+			</div>
+			<div class="mui-input-group tica">
+				<div class="mui-input-row">
+					<label>身份证</label>
+					<input type="text" id="card" class="mui-input-clear" placeholder="请输入身份证号码">
+				</div>
+			</div>
+			<div class="main-Photo" style="margin-top: 1px;">
+				<div class="main-upload">上传身份证照</div>
+				<div class="main-Certificates">
+					<img src="img/ID.png" class="img-img" id="zm" />
+					<img src="img/Back.png" class="img-img" id="fm" />
+				</div>
+			</div>
+
+			<div class="btn" id="btnn">
+				<button>提交认证</button>
+			</div>
+
+		</div>
+		<script type="text/javascript" src="js/mui.js"></script>
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script type="text/javascript" src="js/url.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<script>
+			mui.init();
+			var url_url = localStorage.getItem("http_url");
+			var userid = localStorage.getItem("us_user_id");
+			var img_img = document.getElementsByClassName("img-img");
+			img_img['0'].addEventListener("tap", function() {
+				zhaoxiangji('0')
+			})
+			img_img['1'].addEventListener("tap", function() {
+				zhaoxiangji('1')
+			})
+
+			function zhaoxiangji(num) {
+				var btnArray = [{
+					title: "照相机"
+				}, {
+					title: "相册"
+				}]; //选择按钮  1 2 3
+				plus.nativeUI.actionSheet({
+						title: "请选择",
+						cancel: "取消", // 0
+						buttons: btnArray
+					},
+					function(e) {
+						var index = e.index;
+						switch(index) {
+							case 1:
+								//打开照相机
+								camera(num);
+								break;
+							case 2:
+								//打开相册
+								album(num);
+								break;
+						}
+					});
+			}
+			//打开照相机
+			function camera(num) {
+				var cmr = plus.camera.getCamera();
+				cmr.captureImage(function(p) {
+					//成功
+					plus.io.resolveLocalFileSystemURL(p, function(entry) {
+						var img_path = entry.toLocalURL(); //获得图片路径
+						//调用上传图片函数
+						img_img[num].src = img_path
+						upload_img(img_path, num);
+
+					}, function(e) {
+						console.log("读取拍照文件错误：" + e.message);
+					});
+
+				}, function(e) {
+					console.log("失败：" + e.message);
+				}, {
+					filename: '_doc/camera/',
+					index: 1
+				});
+				//  “_doc/camera/“  为保存文件名
+
+			}
+			//打开相册
+			function album(num) {
+				//alert(num);
+				plus.gallery.pick(function(path) {
+					//调用上传图片函数
+					img_img[num].src = path
+					upload_img(path, num);
+				}, function(e) {
+					console.log("取消选择图片");
+				}, {
+					filter: "image"
+				});
+			}
+			//初始上传地址  
+			var server = url_url + '/user/shift';
+			//上传图片
+			function upload_img(p, num) {
+				var img = new Image();
+				img.src = p; // 传过来的图片路径在这里用。
+				img.onload = function() {
+					var that = this;
+					//生成比例 
+					var w = that.width,
+						h = that.height,
+						scale = w / h;
+					w = 280 || w; //480  你想压缩到多大，改这里
+					h = w / scale;
+					//生成canvas
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					$(canvas).attr({
+						width: w,
+						height: h
+					});
+					ctx.drawImage(that, 0, 0, w, h);
+					$.ajax({
+						type: "post",
+						url: server,
+						dataType: 'json',
+						data: {
+							image: canvas.toDataURL('image/jpeg', 1 || 0.8)
+						},
+						success: function(res) {
+							img_img[num].setAttribute('imgsrc', res.data);
+						}
+					});
+				}
+			}
+
+			$("#btnn").click(function() {
+				var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+				if(!reg.test($("#card").val())) {
+					alert("身份证输入不合法");
+					return false;
+				}
+				var ajaxjson = {
+					'id': userid,
+					'name': $("#name").val(),
+					'card': $("#card").val(),
+					'positive': $('#zm').attr('imgsrc'),
+					'reverse': $('#fm').attr('imgsrc')
+				}
+				console.log(JSON.stringify(ajaxjson))
+				$.ajax({
+					type: "post",
+					url: url_url + "/user/approve",
+					dataType: 'json',
+					async: true,
+					data: ajaxjson,
+					success: function(data) {
+						console.log(JSON.stringify(data))
+						if(data.code == 200) {
+							plus.nativeUI.toast("认证成功"); 
+							mui.back()
+						} else{
+							plus.nativeUI.toast("认证失败")
+						}
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					}
+				})
+			})
+		</script>
+
+	</body>
+
+</html>
