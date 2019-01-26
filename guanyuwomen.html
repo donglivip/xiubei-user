@@ -4,7 +4,6 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-
 		<script type="text/javascript" src="js/mui.js"></script>
 		<link rel="stylesheet" href="css/mui.css" />
 		<link rel="stylesheet" href="css/mui.min.css" />
@@ -12,11 +11,7 @@
 		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
 		<link rel="stylesheet" href="css/base.css" />
 		<script src="js/rem.js"></script>
-		<style>
-			.diz{padding-top: 0.5rem;;}
-			.diz,.tab,.nav{padding-left:0.2rem;color:#000000;font-size:0.24rem;}
-			.im{width: 5.3rem;height: 3.1rem;margin-left: 0.3rem;}
-		</style>
+		<style>.diz{padding-top: 0.5rem;;}.diz,.tab,.nav{padding-left:0.2rem;color:#000000;font-size:0.24rem;}.im{width: 5.3rem;height: 3.1rem;margin-left: 0.3rem;}</style>
 	</head>
 	<body>
 		<header class="mui-bar mui-bar-nav base">
@@ -34,7 +29,6 @@
 		var url_url=localStorage.getItem("http_url");
 		var diz = document.getElementsByClassName("diz");
 			di();
-
 			function di() {
 				$.ajax({
 					type: "get",
@@ -45,11 +39,9 @@
 						diz[1].innerHTML = "公司地址:" + data.data.company_name
 						diz[2].innerHTML = "公司电话:" + data.data.company_phone
 						diz[0].innerHTML = data.data.company_text
-
 					},
 					error: function(data) {
 						console.log(JSON.stringify(data));
-
 					}
 				});
 			}

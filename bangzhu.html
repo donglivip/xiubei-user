@@ -13,6 +13,14 @@
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
 	</head>
+	<style type="text/css">
+		.swiper-slide {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: calc(100% - .4rem);
+		}
+	</style>
 
 	<body>
 		<header class="mui-bar mui-bar-nav base">
@@ -59,7 +67,7 @@
 						</div>
 					</div>
 					<div class="four-right">
-						<img src="img/fsga.jpg" />
+						<img src="img/fsga.png" />
 					</div>
 				</div>
 			</div>
@@ -98,7 +106,6 @@
 						url: localStorage.getItem('http_url') + "/api/svn/up2",
 						dataType: 'json',
 						success: function(res) {
-							console.log(JSON.stringify(res))
 							if(res.pb_svn_number != inf.version) {
 								//										版本更新
 								plus.nativeUI.showWaiting("下载更新资源包,请勿关闭页面！");
@@ -125,220 +132,204 @@
 							}
 						},
 						error: function(err) {
-							alert(JSON.stringify(localStorage.getItem('register_url') + "/svn/up"))
+//							plus.nativeUI.toast('连接服务器失败，请检查网络后重启app！')
 						}
 					});
 				});
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
 
-				function sdsa() {
-					//更新当前用户坐标
-					mui.plusReady(function() {
-						getGeocode();
-					})
-				}
-				//通过定位模块获取位置信息
-				function getGeocode() {
-					plus.geolocation.getCurrentPosition(geoInf, function(e) {
-						outSet("获取定位位置信息失败：" + e.message);
-					}, {
-						geocode: true
-					});
-				}
+			function sdsa() {
 				//更新当前用户坐标
-				function geoInf(position) {
-					var userid = localStorage.getItem("us_user_id");
-					if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
-						mui.toast("请登录");
-						dui.jump('denglu.html', 'denglu');
-						return;
-					}
-					var str = position.addresses;
-					var timeflag = position.timestamp; //获取到地理位置信息的时间戳；一个毫秒数；
-					var codns = position.coords; //获取地理坐标信息；
-					var lat = codns.latitude; //获取到当前位置的纬度；
-					var longt = codns.longitude; //获取到当前位置的经度
-					$.ajax({
-						type: "post",
-						url: url_url + "/user/coordinate",
-						dataType: 'json',
-						async: true,
-						data: {
-							'id': userid,
-							'x': longt,
-							'y': lat
-						},
-						success: function(data) {
-							console.log(JSON.stringify(data));
-
-						},
-						error: function(data) {
-							location.reload();
-						}
-					});
+				mui.plusReady(function() {
+					getGeocode();
+				})
+			}
+			//通过定位模块获取位置信息
+			function getGeocode() {
+				plus.geolocation.getCurrentPosition(geoInf, function(e) {
+					alert('定位失败，请检查网络和GPs后重试!')
+				}, {
+					geocode: true
+				});
+			}
+			//更新当前用户坐标
+			function geoInf(position) {
+				var userid = localStorage.getItem("us_user_id");
+				if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
+					mui.toast("请登录");
+					dui.jump('denglu.html', 'denglu');
+					return;
 				}
-				//帮助点击事件
-				Help[0].addEventListener("tap", function() {
-					dui.jump("shiyongbangzhu.html", "shiyongbangzhu")
-				})
+				var str = position.addresses;
+				var timeflag = position.timestamp; //获取到地理位置信息的时间戳；一个毫秒数；
+				var codns = position.coords; //获取地理坐标信息；
+				var lat = codns.latitude; //获取到当前位置的纬度；
+				var longt = codns.longitude; //获取到当前位置的经度
+				$.ajax({
+					type: "post",
+					url: url_url + "/user/coordinate",
+					dataType: 'json',
+					async: true,
+					data: {
+						'id': userid,
+						'x': longt,
+						'y': lat
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
 
-				//获取用户须知
-				cell[0].addEventListener("tap", function() {
-					dui.jump("yonghuxuzhi.html", "yonghuxuzhi")
-				})
+					},
+					error: function(data) {
+						location.reload();
+					}
+				});
+			}
+			//帮助点击事件
+			Help[0].addEventListener("tap", function() {
+				dui.jump("shiyongbangzhu.html", "shiyongbangzhu")
+			})
 
-				//附近的师傅
-				cell[1].addEventListener("tap", function() {
-					dui.jump("fujindeshifu.html", "fujindeshifu")
-				})
+			//获取用户须知
+			cell[0].addEventListener("tap", function() {
+				dui.jump("yonghuxuzhi.html", "yonghuxuzhi")
+			})
 
-				//招商广告
-				four[0].addEventListener("tap", function() {
-					dui.jump("zhaoshangjiameng.html", "zhaoshangjiameng")
-				})
-				//获取banner图
-				banner();
-				//获取公共
-				bnner();
-				//获取分类
-				classification();
+			//附近的师傅
+			cell[1].addEventListener("tap", function() {
+				dui.jump("fujindeshifu.html", "fujindeshifu")
+			})
 
-				function classification() {
-					$.ajax({
-						type: "get",
-						url: url_url + "/client/stair",
-						dataType: 'json',
-						async: true,
-						data: {},
-						success: function(data) {
-							var tpml = ''
+			//招商广告
+			four[0].addEventListener("tap", function() {
+				dui.jump("zhaoshangjiameng.html", "zhaoshangjiameng")
+			})
+			//获取banner图
+			banner();
+			//获取公共
+			bnner();
+			//获取分类
+			classification();
 
-							for(var a in data.data) {
-
-								if(data.data[a].pb_skill_type_one_icon == null) {
-									var t = '<img id="btnimg" src="img/4949.png" />'
-								} else {
-									var t = '<img src="' + url_url + data.data[a].pb_skill_type_one_icon + '" />'
-								}
-
-								if(a < 7) {
-									tpml += '<div class="three-box" data_id="' + data.data[a].pb_skill_type_one_id + '" data_name="' + data.data[a].pb_skill_type_one_title + '">' +
-										'<div class="three-top">' +
-										t +
-										'</div>' +
-										'<div class="three-bottom">' + data.data[a].pb_skill_type_one_title + '</div>' +
-										'</div>';
-								}
-
+			function classification() {
+				$.ajax({
+					type: "get",
+					url: url_url + "/client/stair",
+					dataType: 'json',
+					async: true,
+					data: {},
+					success: function(data) {
+						var tpml = ''
+						for(var a in data.data) {
+							if(data.data[a].pb_skill_type_one_icon == null) {
+								var t = '<img id="btnimg" src="img/4949.png" />'
+							} else {
+								var t = '<img src="' + url_url + data.data[a].pb_skill_type_one_icon + '" />'
+							}
+							if(a < 7) {
+								tpml += '<div class="three-box" data_id="' + data.data[a].pb_skill_type_one_id + '" data_name="' + data.data[a].pb_skill_type_one_title + '">' +
+									'<div class="three-top">' +
+									t +
+									'</div>' +
+									'<div class="three-bottom">' + data.data[a].pb_skill_type_one_title + '</div>' +
+									'</div>';
 							}
 
-							tpml += '<div class="three-box celll" data_id="' + data.data[a].pb_skill_type_one_id + '">' +
-								'<div class="three-top">' +
-								'<img src="img/gengduo.png" />' +
-								'</div>' +
-								'<div class="three-bottom">更多分类</div>' +
-								'</div>'
-
-							list.innerHTML += tpml;
-
-							feblei();
-
-						},
-						error: function(data) {
-							console.log(JSON.stringify(data));
 						}
-					});
-				}
-				//获取banner图,没做轮播
-				function banner() {
-					$.ajax({
-						type: "get",
-						url: url_url + "/client/banner",
-						dataType: 'json',
-						async: true,
-						data: {},
-						success: function(data) {
-							for(var i = 0; i < data.data.length; i++) {
-								$('.mui-slider-group').append(`
+						tpml += '<div class="three-box celll" data_id="' + data.data[a].pb_skill_type_one_id + '">' +
+							'<div class="three-top">' +
+							'<img src="img/gengduo.png" />' +
+							'</div>' +
+							'<div class="three-bottom">更多分类</div>' +
+							'</div>'
+
+						list.innerHTML += tpml;
+						feblei();
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					}
+				});
+			}
+			//获取banner图,没做轮播
+			function banner() {
+				$.ajax({
+					type: "get",
+					url: url_url + "/client/banner",
+					dataType: 'json',
+					async: true,
+					data: {},
+					success: function(data) {
+						for(var i = 0; i < data.data.length; i++) {
+							$('.mui-slider-group').append(`
 								<div class="mui-slider-item">
 									<img src="${url_url + data.data[i].pb_banner_img_path}" />
 								</div>
 							`)
-							}
-							mui(".mui-slider").slider({
-								interval: 3000
-							})
-						},
-						error: function(data) {
-							console.log(JSON.stringify(data));
 						}
-					});
-				}
-				//获取公共，没做轮播
-				function bnner() {
-					$.ajax({
-						type: "get",
-						url: url_url + "/user/notice",
-						dataType: 'json',
-						async: true,
-						data: {},
-						success: function(data) {
-							for(var a in data) {
-								$('.swiper-wrapper').append(`
+						mui(".mui-slider").slider({
+							interval: 3000
+						})
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
+					}
+				});
+			}
+			//获取公共，没做轮播
+			function bnner() {
+				$.ajax({
+					type: "get",
+					url: url_url + "/user/notice",
+					dataType: 'json',
+					async: true,
+					data: {},
+					success: function(data) {
+						for(var a in data) {
+							$('.swiper-wrapper').append(`
 								<div class="two-text swiper-slide" style='display:flex;align-items:center'>${data[a].pb_notice_content}</div>	
 							`)
-							}
-							var swiper = new Swiper('.swiper-container', {
-								direction: 'vertical',
-								loop: true,
-								autoplay: true
-							});
-
-						},
-						error: function(data) {
-							console.log(JSON.stringify(data));
 						}
-					});
-				};
-
-				function feblei() {
-					var cell = document.getElementsByClassName("three-box");
-					var celll = document.getElementsByClassName("celll");
-					for(var a = 0; a < cell.length; a++) {
-						if(a < 7) {
-							cell[a].addEventListener("tap", function() {
-
-								var userid = localStorage.getItem("us_user_id");
-								if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
-									mui.toast("请登录");
-									dui.jump('denglu.html', 'denglu');
-									return;
-								}
-
-								var oid_idd = this.getAttribute('data_id');
-								var data_name = this.getAttribute('data_name');
-
-								console.log(oid_idd);
-								console.log(data_name)
-
-								localStorage.setItem("oid_idd", oid_idd);
-								localStorage.setItem("data_name", data_name);
-
-								dui.jump("erjifenlie.html", "erjifenlie");
-
-							})
-						}
+						var swiper = new Swiper('.swiper-container', {
+							direction: 'vertical',
+							loop: true,
+							autoplay: true
+						});
+					},
+					error: function(data) {
+						console.log(JSON.stringify(data));
 					}
-					celll[0].addEventListener("tap", function() {
-						dui.jump("zonghefenlei.html", "zonghefenlei");
-					})
+				});
+			};
+			function feblei() {
+				var cell = document.getElementsByClassName("three-box");
+				var celll = document.getElementsByClassName("celll");
+				for(var a = 0; a < cell.length; a++) {
+					if(a < 7) {
+						cell[a].addEventListener("tap", function() {
+							var userid = localStorage.getItem("us_user_id");
+							if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
+								mui.toast("请登录");
+								dui.jump('denglu.html', 'denglu');
+								return;
+							}
+							var oid_idd = this.getAttribute('data_id');
+							var data_name = this.getAttribute('data_name');
+							localStorage.setItem("oid_idd", oid_idd);
+							localStorage.setItem("data_name", data_name);
+							dui.jump("erjifenlie.html", "erjifenlie");
+						})
+					}
+				}
+				celll[0].addEventListener("tap", function() {
+					dui.jump("zonghefenlei.html", "zonghefenlei");
+				})
 
-				};
+			};
 		</script>
 	</body>
 

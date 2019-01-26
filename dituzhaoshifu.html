@@ -8,13 +8,26 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<script src="js/mui.min.js"></script>
 		<link rel="stylesheet" href="css/base.css" />
-		<script src="https://webapi.amap.com/maps?v=1.4.8&key=86a658389dfffb481baf968c8e1a843b"></script>
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=e8d613b264dcd6ca83d12f759c9690ed"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
 	</head>
 	<style type="text/css">
 		html,
 		body,
 		#container {
 			height: 100%;
+		}
+		
+		#pickerBox {
+			position: fixed;
+			top: 3rem;
+			width: calc(100% - .4rem);
+			z-index: 999;
+		}
+		
+		#pickerBox input {
+			width: 100%;
+			margin-left: .2rem;
 		}
 	</style>
 
@@ -23,6 +36,10 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">地图选择师傅</h1>
 		</header>
+		<div id="pickerBox">
+			<input id="pickerInput" placeholder="输入关键字选取地点" />
+			<div id="poiInfo"></div>
+		</div>
 		<div class="mui-content" id="container">
 
 		</div>
@@ -30,7 +47,8 @@
 		<script>
 			$(function() {
 				var map = null,
-					sdata=null;
+					sdata = null,
+					marker = null;
 
 				function plusReady() {
 					plus.nativeUI.showWaiting('地图加载中。。。')
@@ -56,7 +74,7 @@
 							]
 						});
 						//添加点标记，并使用自己的icon
-						var marker = new AMap.Marker({
+						marker = new AMap.Marker({
 							map: map,
 							position: [p.coords.longitude, p.coords.latitude],
 							icon: new AMap.Icon({
@@ -65,20 +83,26 @@
 							})
 						});
 						//						获取附近师傅
+						myajax(p.coords.longitude,p.coords.latitude)
+					}, function(e) {
+						alert("请检查手机网络或者位置服务开关是否打开后重试！")
+					});
+
+					function myajax(x,y) {
 						$.ajax({
 							type: "get",
 							url: localStorage.getItem('http_url') + "/userOrder/MasterOnMap",
 							dataType: 'json',
 							data: {
-								x: p.coords.longitude,
-								y: p.coords.latitude,
-								type: localStorage.getItem('data_id_er')
+								x: x,
+								y: y,
+								type: localStorage.getItem('data_id_er'),
+								userId: localStorage.getItem('us_user_id')
 							},
 							success: function(res) {
-								sdata=res.data
-								console.log(JSON.stringify(sdata))
+								sdata = res.data
 								for(var i = 0; i < res.data.length; i++) {
-									addmarker(res.data[i].us_user_x,res.data[i].us_user_y,i)
+									addmarker(res.data[i].us_user_x, res.data[i].us_user_y, i)
 								}
 								plus.nativeUI.closeWaiting()
 							},
@@ -86,10 +110,7 @@
 								console.log(JSON.stringify(err))
 							}
 						});
-					}, function(e) {
-						alert("请检查手机网络或者位置服务开关是否打开后重试！")
-					});
-
+					}
 					function addmarker(lat, lng, id) {
 						var that = this
 						var marker = new AMap.Marker({
@@ -100,12 +121,32 @@
 						});
 						map.add(marker);
 						marker.on('click', function(MapsEvent) {
-							localStorage.setItem('pid',JSON.stringify(sdata[marker.getTitle()]))
+							localStorage.setItem('pid', JSON.stringify(sdata[marker.getTitle()]))
+							var ditu=plus.webview.getWebviewById('dituxiadan')
+							mui.fire(ditu,'xiadanyemian',{})
 							mui.openWindow({
-								url:'./dituxiadan.html',
-								id:'dituxiadan'
+								url: './dituxiadan.html',
+								id: 'dituxiadan'
 							})
 						})
+					}
+					AMapUI.loadUI(['misc/PoiPicker'], function(PoiPicker) {
+						var poiPicker = new PoiPicker({
+							//city:'北京',
+							input: 'pickerInput'
+						});
+						//初始化poiPicker
+						poiPickerReady(poiPicker);
+					});
+
+					function poiPickerReady(poiPicker) {
+						window.poiPicker = poiPicker;
+						//选取了某个POI
+						poiPicker.on('poiPicked', function(poiResult) {
+							myajax(poiResult.item.location.lng,poiResult.item.location.lat)
+							marker.setPosition(poiResult.item.location);
+							map.setCenter(poiResult.item.location);
+						});
 					}
 				}
 				if(window.plus) {

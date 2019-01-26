@@ -96,7 +96,7 @@
 							var tpml = '<div class="main-two" data_id="' + data.data[a].pb_order_id + '"  state="' + data.data[a].pb_order_state + '">' +
 								'<div class="two-top">' +
 								'<div class="top-text">订单已生成</div>' +
-								'<div class="top-text">下单时间:' + data.data[a].sm_time + '</div>' +
+								'<div class="top-text">下单时间:' + data.data[a].pb_order_create_time + '</div>' +
 								'</div>' +
 								'<div class="two-bottom">' +
 								'<div class="bottom-left">' +
@@ -108,7 +108,7 @@
 								t +
 								'<div class="right-text" >订单地址：<span style="color: #FF0000;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;width:3.5rem;text-align:right;">' + data.data[a].pb_region_text + '</span></div>' +
 								'<div class="bottom-box">' +
-								'<div class="right-text">订单押金：<span style="color:#FF0000;">' + data.data[a].pb_order_deposit + '</span></div>' +
+//								'<div class="right-text">订单押金：<span style="color:#FF0000;">' + data.data[a].pb_order_deposit + '</span></div>' +
 								'</div>' +
 								'<div class="div_class">订单编号：<span style="float:right;">' + data.data[a].pb_order_number + '</div>' +
 								'</div>' +
@@ -121,7 +121,7 @@
 
 					},
 					error: function(data) {
-						//						console.log(JSON.stringify(data));
+						alert('网络连接失败,请重启app再试！')
 					}
 
 				});

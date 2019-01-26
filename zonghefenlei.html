@@ -12,7 +12,7 @@
 			.zi{width: 25%;float:left;border-radius:10px;padding:5px;}
 			.zonghefen{width:100%;font-size: 12px;text-align: center;padding: 5px;background: #FFFFFF;border-radius:10px ;}
 			.zonghefen img{border-radius:50%;width:70px;height:70px;}
-			.zonghefen span{margin:5px;}
+			.zonghefen span{white-space: nowrap;overflow: hidden;display: inline-block;width: 100%;}
 		</style>
 	</head>
 	<body>
@@ -30,12 +30,7 @@
 		<script type="text/javascript" src="js/url.js" ></script>
 		<script>
 			var url_url=localStorage.getItem("http_url");
-			
 			var lis2t=document.getElementById("lis2t");
-			
-			
-			console.log(url_url);
-			
 			$.ajax({
 				type: "get", 
 				url: url_url + "/client/stair",
@@ -43,8 +38,6 @@
 				async:true,
 				data:{},
 				success: function(data) {
-					console.log(JSON.stringify(data));
-					
 					for (var a in data.data) {
 						
 						if (data.data[a].pb_skill_type_one_icon==null) {
@@ -70,20 +63,15 @@
 					console.log(JSON.stringify(data));
 				} 
 			}); 
-			
-			
-			
 			function hidfds(){
 				var zi=document.getElementsByClassName("zi");
-					
 					for (var a=0;a<zi.length;a++) {
 						zi[a].addEventListener("tap",function(){
 							var da_id=this.getAttribute('da_id');
 							var	title=this.getAttribute('title');
-							console.log(da_id);
-							console.log(title);
 							localStorage.setItem("oid_idd",da_id)
 							localStorage.setItem("title",title)
+							localStorage.setItem('data_name',title)
 							dui.jump("erjifenlie.html","erjifenlie.html")
 						})
 					}

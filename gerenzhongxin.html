@@ -23,7 +23,7 @@
 			</div>
 			<div class="main">
 				<div class="main-one">
-					<img class="img_vip" id="vip_id" src="img/vip.png">
+					<!--<img class="img_vip" id="vip_id" src="img/vip.png">-->
 					<div class="one-left" id="userImg">
 						<img src="img/386d42effa6f32130e69ff741f02fc42_58e89bee922a2.png" />
 					</div>
@@ -31,16 +31,16 @@
 						<div class="one-text">昵称：<span class="name1">未设置</span></div>
 						<div class="one-news">17712036267</div>
 					</div>
-					<div class="border-top-right" id="member">
-						<img src="img/yu.png" />
-						<div>开通会员</div>
+					<div class="border-top-right" id="member" style="background: none!important;">
+						<!--<img src="img/yu.png" />
+						<div>开通会员</div>-->
 					</div>
 				</div>
 				<div class="main-two">
 					<img src="img/qianbao.png" />
 					<div class="two-text">我的钱包</div>
 				</div>
-				<div class="main-two">
+				<div class="main-two" id="renzheng">
 					<img src="img/renzheng.png" />
 					<div class="two-text" >认证中心</div>
 				</div>
@@ -64,45 +64,35 @@
 		var name1 = localStorage.getItem('name');
 		//获取登录的手机号码
 		var ph = localStorage.getItem('phones');
-		
 		var userid=localStorage.getItem("us_user_id");
-		
 		var maintwo=document.getElementsByClassName("main-two");
-			
 		var member=document.getElementById("member");
-		
 		var shezhi=document.getElementById("shezhi");
-		
-		
-		
 		var neme=localStorage.getItem("name");
 		var phones=localStorage.getItem("phones");
 		var namee=document.getElementsByClassName("name1");
 		var one_news=document.getElementsByClassName("one-news");
-		var vip_id=document.getElementById("vip_id");
+//		var vip_id=document.getElementById("vip_id");
 		var ma_vip_id=localStorage.getItem("ma_vip_id");
-		
-			if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
-				vip_id.style.display="none";
-			}else{
-				vip_id.style.display="block";
-			}
-	
-		
-		
-		
+//			if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
+//				vip_id.style.display="none";
+//			}else{
+//				vip_id.style.display="block";
+//			}
 			namee[0].innerHTML=neme;
 			one_news[0].innerHTML=phones;
 			//接收通知
 			document.addEventListener("gerenzhongxin",function(){
-				
-				var vip_id=document.getElementById("vip_id");
-				var ma_vip_id=localStorage.getItem("ma_vip_id");
+//				var vip_id=document.getElementById("vip_id");
+//				var ma_vip_id=localStorage.getItem("ma_vip_id");
 				//会员图标显示
-				if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
-					vip_id.style.display="none";
-				}else{
-					vip_id.style.display="block";
+//				if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
+//					vip_id.style.display="none";
+//				}else{
+//					vip_id.style.display="block";
+//				}
+				if(localStorage.getItem('us_user_state')==2||localStorage.getItem('us_user_state')==3){
+					$('#renzheng').hide()
 				}
 				var neme=localStorage.getItem("name");
 				var phones=localStorage.getItem("phones");
@@ -111,8 +101,10 @@
 				var one_news=document.getElementsByClassName("one-news");
 					namee[0].innerHTML=neme;
 					one_news[0].innerHTML=phones;
-			})
-		
+					if(localStorage.getItem('us_user_state')==2||localStorage.getItem('us_user_state')==3){
+				$('#renzheng').hide()
+			}
+		})
 			//设置
 			shezhi.addEventListener("tap",function(){
 				var userid=localStorage.getItem("us_user_id");
@@ -124,11 +116,10 @@
 					dui.jump("shezhi.html","shezhi")
 				}	
 			})
-		
 			//开通会员
-			member.addEventListener("tap",function(){
-					dui.jump("membership.html","membership")
-			})
+//			member.addEventListener("tap",function(){
+//					dui.jump("membership.html","membership")
+//			})
 			
 			//我的钱包
 			maintwo[0].addEventListener("tap",function(){
@@ -139,15 +130,15 @@
 			maintwo[1].addEventListener("tap",function(){
 					dui.jump("renzhenzhongxin.html","renzhenzhongxin")
 			})
-			
+			if(localStorage.getItem('us_user_state')==2||localStorage.getItem('us_user_state')==3){
+				$('#renzheng').hide()
+			}
 			//帮助
 			maintwo[2].addEventListener("tap",function(){
 				
 					dui.jump("shiyongbangzhu.html","shiyongbangzhu")
 				
 			})
-			
-			
 			//关于我们
 			maintwo[3].addEventListener("tap",function(){
 				

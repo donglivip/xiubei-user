@@ -51,7 +51,7 @@
 			</div>
 			<div class="register_Agreement">
 				<div class="ement">
-					<h1>注册即代表您已阅读并同意<a>用户登陆协议.</a></h1>
+					<h1>注册即代表您已阅读并同意<a onclick="dui.jump('dengluxieyi.html', 'dengluxieyi');">用户登陆协议.</a></h1>
 					<div style="float:right; font-size: 0.24rem;" onclick="mui.openWindow('upPass.html')">忘记密码?</div>
 				</div>
 
@@ -112,7 +112,6 @@
 					'Password': pass
 				},
 				success: function(data) {
-					console.log(JSON.stringify(data));
 					if(data.code == 200) {
 						//登录的ID
 						localStorage.setItem("us_user_id", data.data.us_user_id);
@@ -134,6 +133,7 @@
 						localStorage.setItem("us_user_y", data.data.us_user_y);
 						//VIP字段
 						localStorage.setItem("ma_vip_id", data.data.ma_vip_id);
+						localStorage.setItem("us_user_state", data.data.us_user_state);
 						//						邀请码
 						localStorage.setItem("usShareCode", data.data.us_user_invitation_code);
 						//登陆成功后跳转页面

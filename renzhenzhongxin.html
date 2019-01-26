@@ -57,8 +57,8 @@
 			<div class="main-Photo" style="margin-top: 1px;">
 				<div class="main-upload">上传身份证照</div>
 				<div class="main-Certificates">
-					<img src="img/ID.png" class="img-img" id="zm" />
-					<img src="img/Back.png" class="img-img" id="fm" />
+					<img src="img/ID.png" class="img-img" id="zm" onclick="zhaoxiangji(0)" imgsrc=''/>
+					<img src="img/Back.png" class="img-img" id="fm"  onclick="zhaoxiangji(1)" imgsrc=''/>
 				</div>
 			</div>
 
@@ -76,13 +76,6 @@
 			var url_url = localStorage.getItem("http_url");
 			var userid = localStorage.getItem("us_user_id");
 			var img_img = document.getElementsByClassName("img-img");
-			img_img['0'].addEventListener("tap", function() {
-				zhaoxiangji('0')
-			})
-			img_img['1'].addEventListener("tap", function() {
-				zhaoxiangji('1')
-			})
-
 			function zhaoxiangji(num) {
 				var btnArray = [{
 					title: "照相机"
@@ -187,6 +180,14 @@
 					alert("身份证输入不合法");
 					return false;
 				}
+				if($("#name").val()==''){
+					alert("请输入姓名！");
+					return false;
+				}
+				if($('#zm').attr('imgsrc')==''||$('#fm').attr('imgsrc')==''){
+					alert("身份证照片不能为空");
+					return false;
+				}
 				var ajaxjson = {
 					'id': userid,
 					'name': $("#name").val(),
@@ -194,7 +195,6 @@
 					'positive': $('#zm').attr('imgsrc'),
 					'reverse': $('#fm').attr('imgsrc')
 				}
-				console.log(JSON.stringify(ajaxjson))
 				$.ajax({
 					type: "post",
 					url: url_url + "/user/approve",
@@ -202,16 +202,18 @@
 					async: true,
 					data: ajaxjson,
 					success: function(data) {
-						console.log(JSON.stringify(data))
 						if(data.code == 200) {
+							localStorage.setItem('us_user_state',2)
 							plus.nativeUI.toast("认证成功"); 
+							var my=plus.webview.getWebviewById('gerenzhongxin')
+							mui.fire(my,'gerenzhongxin',{})
 							mui.back()
 						} else{
-							plus.nativeUI.toast("认证失败")
+							plus.nativeUI.toast(data.msg)
 						}
 					},
 					error: function(data) {
-						console.log(JSON.stringify(data));
+						alert('您已提交认证!');
 					}
 				})
 			})

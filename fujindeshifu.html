@@ -80,12 +80,12 @@
 					'latitude':la,
 					'distance':3000
 				}))
+					console.log(JSON.stringify(data))
 					if (data=='') {
 						return;
 					}
 					var	tpml=''
 					for (var a in data.data) {
-						if(data.data[a].busy==0&&data.data[a].us_user_state==1){
 							tpml+='<div class="main-one" data_id="data.data[a].us_user_id">'+
 									'<div class="one-left">'+
 										'<img src="'+url_url+''+data.data[a].us_user_head_portrait+'"/>'+
@@ -124,7 +124,6 @@
 										'<div class="right-news">距离:'+data.data[a].distance+'km</div>'+
 									'</div>'+				
 								'</div>'
-						}
 					}
 					list.innerHTML+=tpml;
 					xuaz();

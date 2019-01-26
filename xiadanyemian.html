@@ -8,6 +8,8 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<script src="js/mui.min.js"></script>
 		<script src="js/rem.js"></script>
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=e8d613b264dcd6ca83d12f759c9690ed"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/xiadanyemian.css" />
 		<link rel="stylesheet" href="css/mui.picker.min.css" />
@@ -31,10 +33,20 @@
 				-webkit-touch-callout: none;
 				-webkit-user-select: none;
 			}
+			
+			#city {
+				flex: 1;
+				display: flex;
+				height: .8rem;
+			}
+			
+			#city select {
+				height: .8rem;
+			}
 		</style>
 	</head>
 
-	<body onresize="document.activeElement.scrollIntoView(false);">
+	<body>
 		<header class="mui-bar mui-bar-nav base">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">直接下单</h1>
@@ -54,20 +66,23 @@
 			</div>
 			<div class="divyi flex">
 				<span class="font">手机号码：</span>
-				<input class="inpi cell" style="border: 0px;" placeholder="125478963789" type="tel" value="">
+				<input class="inpi cell" style="border: 0px;" placeholder="125478963789" type="number" value="">
 			</div>
 			<div class="divyi flex">
 				<span class="font">下单类型：</span>
-				<input class="inpi " style="border: 0px;" type="text" value="直接下单" readonly="readonly">
+				<input class="inpi " style="border: 0px;" type="text" value="抢单模式(附近的师傅抢单)" readonly="readonly">
 			</div>
-			<div class="divyi flex">
+			<div class="divyi flex" style="visibility: hidden;">
 				<span class="font">下单押金：</span>
 				<input class="inpi  cell" style="border: 0px;" value="50元" type="text" readonly="readonly">
 			</div>
 			<div class="divyi flex">
 				<span class="font">当前位置：</span>
-				<input class="ini cell" style="border: 0px;" type="text" placeholder="请选择当前地址" readonly="readonly">
-				<button class="btno" id="genghuan">选择位置</button>
+				<div id="city">
+					<select class="prov" name="usAdsProvince"></select>
+					<select class="city" name="usAdsCity"></select>
+					<select class="dist" name="usAdsArea"></select>
+				</div>
 			</div>
 			<div class="divyi flex">
 				<span class="font">详细地址：</span>
@@ -75,7 +90,7 @@
 			</div>
 			<div class="divyi flex">
 				<span class="font">备注信息：</span>
-				<textarea class="cell" id="dsadfsds" style="width: 75%;height: 35px;line-height:10px;margin-top:13px;font-size: 12px;border: 0;" placeholder="请输入备注信息" value=" "></textarea>
+				<textarea class="cell" id="dsadfsds" style="width: 75%;height: 35px;line-height:10px;margin-top:13px;font-size: 12px;border: 0;" placeholder="请输入价格面议或者最低维修费用" value=" "></textarea>
 			</div>
 			<div class="divyi" style="height: 7.9rem;">
 				<!--<p>录制视频</p>
@@ -95,7 +110,23 @@
 		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
 		<script type="text/javascript" src="js/mui.picker.min.js"></script>
 		<script type="text/javascript" src="js/dui.js"></script>
+		<script src="js/jquery.cityselect.js" type="text/javascript" charset="utf-8"></script>
 		<script>
+			mui.plusReady(function() {
+				plus.geolocation.getCurrentPosition(function(position) {
+					$("#city").citySelect({
+						prov: position.address.province.substring(0, 2),
+						city: position.address.city.substring(0, 2),
+						dist: position.address.district,
+						nodata: "none"
+					});
+				}, function(e) {
+					outSet("获取定位位置信息失败：" + e.message);
+				}, {
+					geocode: true
+				});
+			})
+
 			var url_url = localStorage.getItem("http_url");
 			var data_id_er = localStorage.getItem('data_id_er')
 			var data_name_er = localStorage.getItem('data_name_er')
@@ -113,7 +144,6 @@
 				var district = localStorage.getItem("district");
 				var Provinces = localStorage.getItem("Provinces");
 				cell[3].value = Provinces;
-				cell[4].value = dizhi;
 			})
 			$("#genghuan").click(function() {
 				dui.jump("genghuanweizhi.html", "genghuanweizhi");
@@ -244,6 +274,8 @@
 			$("#queren").click(function() {
 				function plusReady() {
 					plus.geolocation.getCurrentPosition(function(p) {
+						plus.nativeUI.showWaiting()
+
 						var us_user_id = localStorage.getItem("us_user_id");
 						var data_id_er = localStorage.getItem('data_id_er')
 						var district = localStorage.getItem("district");
@@ -254,7 +286,7 @@
 						//详细地址
 						var xiangxi = inpi[5].value;
 						//备注信息
-						var Remarks = cell[5].value;
+						var Remarks = $('#dsadfsds').val();
 						//选择时间
 						var time = inpi[0].value;
 						if(name == '') {
@@ -269,47 +301,65 @@
 							alert("请填写所在区域！");
 							return;
 						}
-						var ajaxjson = {
-							'userId': us_user_id, //用户ID
-							'typeId': data_id_er, //二级ID
-							'region': Provinces, //地区省市县
-							'detailed': xiangxi, //详细地址
-							'telName': name, //联系人
-							'phoneNumber': phones, //手机号
-							'remark': Remarks, //备注
-							'openDoorTime': time, //时间
-							'video': '', //视频
-							'img': JSON.stringify([myaudio]), //图片
-							target_postion_x: p.coords.longitude,
-							target_postion_y: p.coords.latitude
-						}
-						console.log(JSON.stringify(ajaxjson))
-						//提交订单
-						$.ajax({
-							type: "post",
-							url: url_url + "/userOrder/Overbooking",
-							async: true,
-							dataType: "JSON",
-							data: ajaxjson,
-							success: function(data) {
-								if(data.code == 200) {
-									plus.nativeUI.toast("提交订单成功！等待接单")
-									mui.openWindow({
-										url: './index.html',
-										id: 'index'
-									})
-								} else if(data.code == 301) {
-									mui.toast("账户余额不足！请充值！")
-									dui.jump("wodedingdan.html", "wodedingdan");
-									return;
+						AMap.service('AMap.Geocoder', function() { //回调函数
+							//实例化Geocoder
+							geocoder = new AMap.Geocoder({
+								city: "" //城市，默认：“全国”
+							});
+							geocoder.getLocation($('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text() + xiangxi, function(status, result) {
+								if(status === 'complete' && result.info === 'OK') {
+									var ajaxjson = {
+										'userId': us_user_id, //用户ID
+										'typeId': data_id_er, //二级ID
+										'region': $('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text(), //地区省市县
+										'detailed': xiangxi, //详细地址
+										'telName': name, //联系人
+										'phoneNumber': phones, //手机号
+										'remark': Remarks, //备注
+										'openDoorTime': time, //时间
+										'video': '', //视频
+										'img': JSON.stringify([myaudio]), //图片
+										target_postion_x: result.geocodes[0].location.lng,
+										target_postion_y: result.geocodes[0].location.lat
+									}
+									//提交订单
+									$.ajax({
+										type: "post",
+										url: url_url + "/userOrder/Overbooking",
+										async: true,
+										dataType: "JSON",
+										data: ajaxjson,
+										success: function(data) {
+											plus.nativeUI.closeWaiting()
+											if(data.code == 200) {
+												var wodedingdan = plus.webview.getWebviewById("wodedingdan");
+												mui.fire(wodedingdan, 'wodedingdan', {});
+												plus.nativeUI.toast("提交订单成功！等待接单")
+												mui.openWindow({
+													url: './index.html',
+													id: 'index'
+												})
+											} else if(data.code == 301) {
+												mui.toast(data.msg)
+												dui.jump("wodedingdan.html", "wodedingdan");
+												return;
+											} else if(data.code == 300) {
+												mui.toast(data.msg)
+												dui.jump("wodedingdan.html", "wodedingdan");
+												return;
+											} else {
+												mui.toast("提交失败!请联系管理员!")
+											}
+										},
+										error: function(data) {
+											console.log(JSON.stringify(data));
+										}
+									});
 								} else {
-									mui.toast("提交失败!请联系管理员!")
+									//获取经纬度失败
 								}
-							},
-							error: function(data) {
-								console.log(JSON.stringify(data));
-							}
-						});
+							});
+						})
 					}, function(e) {
 						that.city = '获取失败'
 					});

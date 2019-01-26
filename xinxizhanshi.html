@@ -24,6 +24,7 @@
 			<div class="main">
 				<div class="main-one">
 					<div class="one-text" id="one-text">用户下单帮助</div>
+					<div class="one-text" id="text">用户下单帮助</div>
 				</div>
 				<div class="main-two">
 					<div class="two-text">发布人：admin</div>
@@ -37,11 +38,9 @@
 	</body>
 	<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
 	<script>
-		
-		var onetext=document.getElementById("one-text");
-		var threetext=document.getElementById("three-text");
-		
-		var title=localStorage.getItem("title_ti")
-		var body_bo=localStorage.getItem("body_bo")
+		$(function(){
+			$('#one-text').text(localStorage.getItem('title_ti'))
+			$('#text').text(localStorage.getItem('body_bo'))
+		})
 	</script>
 </html>

@@ -248,7 +248,8 @@
   },
   "index.html": {
     "resources": [
-      "bangzhu.html"
+      "bangzhu.html",
+      "js/index.js"
     ],
     "refer": [
       "bangzhu.html",
@@ -284,7 +285,8 @@
   },
   "xiadanyemian.html": {
     "refer": [
-      "genghuanweizhi.html"
+      "genghuanweizhi.html",
+      "index.html"
     ]
   },
   "dituzhaoshifu.html": {
@@ -305,7 +307,8 @@
   },
   "dituxiadan.html": {
     "refer": [
-      "genghuanweizhi.html"
+      "genghuanweizhi.html",
+      "index.html"
     ]
   }
 }

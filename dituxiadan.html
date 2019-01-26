@@ -8,12 +8,26 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<script src="js/mui.min.js"></script>
 		<script src="js/rem.js"></script>
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=e8d613b264dcd6ca83d12f759c9690ed"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/xiadanyemian.css" />
 		<link rel="stylesheet" href="css/dixuanzxiad.css" />
+		<link rel="stylesheet" href="css/mui.picker.min.css" />
 	</head>
+	<style type="text/css">
+		#city {
+			flex: 1;
+			display: flex;
+			height: .8rem;
+		}
+		
+		#city select {
+			height: .8rem;
+		}
+	</style>
 
-	<body onresize="document.activeElement.scrollIntoView(false);">
+	<body>
 		<header class="mui-bar mui-bar-nav base">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">地图下单</h1>
@@ -25,7 +39,7 @@
 			</div>
 			<div class="divyi flex">
 				<span class="font">上门时间：</span>
-				<input class="inpi" style="border: 0px;" type="datetime-local" id="openDoorTime">
+				<input class="inpi" style="border: 0px;" type="text" id="openDoorTime" data-options='{}' readonly="readonly" placeholder="请输入上门时间">
 			</div>
 			<div class="divyi flex">
 				<span class="font">联系人：</span>
@@ -33,35 +47,34 @@
 			</div>
 			<div class="divyi flex">
 				<span class="font">手机号码：</span>
-				<input class="inpi" style="border: 0px;" placeholder="请输入手机号码" type="text" id="phoneNumber">
+				<input class="inpi" style="border: 0px;" placeholder="请输入手机号码" type="number" id="phoneNumber">
 			</div>
 			<div class="divyi flex">
 				<span class="font">下单类型：</span>
 				<input class="inpi" style="border: 0px;" type="text" value="地图下单" readonly="readonly">
 			</div>
-			<div class="divyi flex">
+			<div class="divyi flex" style="visibility: hidden;">
 				<span class="font">下单押金：</span>
 				<input class="inpi" style="border: 0px;" value="50" type="text" readonly="readonly" id="yajin">
 			</div>
 			<div class="divyi flex">
 				<span class="font">当前位置：</span>
-				<input class="ini" style="border: 0px;" type="text" placeholder="xxxxx" readonly="readonly" id="adress">
-				<button class="btno" id="genghuan">更换位置</button>
+				<div id="city">
+					<select class="prov" name="usAdsProvince"></select>
+					<select class="city" name="usAdsCity"></select>
+					<select class="dist" name="usAdsArea"></select>
+				</div>
 			</div>
 			<div class="divyi flex">
 				<span class="font">详细地址：</span>
 				<input class="inpi" style="border: 0px;" type="text" placeholder="请输入详细地址" id="detailed">
 			</div>
+			<div class="divyi flex">
+				<span class="font">备注：</span>
+				<input class="inpi" style="border: 0px;" type="text" placeholder="请输入价格面议或者最低维修费用" id="remark">
+			</div>
 			<div class="dituxiadan">
-				<div class="dituxiadan-left">
-					<img src="img/ftgjsd.jpg" id="head" />
-				</div>
-				<div class="dituxiadan-content">
-					<div class="dituxiadan-text" id="name">黄师傅</div>
-				</div>
-				<a class="dituxiadan-right" href="" id="phone">
-					<img src="img/dianhua.png" />
-				</a>
+				<div class="dituxiadan-text" id="name">黄师傅</div>
 			</div>
 			<div class="divyi" style="height: 7.9rem;">
 				<!--<p>录制视频</p>
@@ -77,213 +90,251 @@
 			<div class="button_cal">
 				<button class="button" id="yhhh">确定下单</button>
 			</div>
-			<script type="text/javascript" src="js/mui.min.js"></script>
-			<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
-			<script type="text/javascript" src="js/dui.js"></script>
-			<script src="js/dw.js" type="text/javascript" charset="utf-8"></script>
-			<script>
-				$(function() {
-					var myvideo = null,
-						myaudio = null;
-					$("#genghuan").click(function() {
-						dui.jump("genghuanweizhi.html", "genghuanweizhi");
+		</div>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<script type="text/javascript" src="js/dui.js"></script>
+		<script type="text/javascript" src="js/mui.picker.min.js"></script>
+		<script src="js/dw.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.cityselect.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			$(function() {
+				var inpi = document.getElementsByClassName("inpi");
+				mui.plusReady(function() {
+					plus.geolocation.getCurrentPosition(function(position) {
+						$("#city").citySelect({
+							prov: position.address.province.substring(0, 2),
+							city: position.address.city.substring(0, 2),
+							dist: position.address.district,
+							nodata: "none"
+						});
+					}, function(e) {
+						outSet("获取定位位置信息失败：" + e.message);
+					}, {
+						geocode: true
 					});
-					mui.plusReady(function() {
-						//设置bottom绝对位置
-						document.getElementById('yhhh').style.top = (plus.display.resolutionHeight - 45) + "px";
+				})
+				var myvideo = null,
+					myaudio = null;
+				$("#genghuan").click(function() {
+					dui.jump("genghuanweizhi.html", "genghuanweizhi");
+				});
+				//选择时间
+				(function($) {
+					$.init();
+					var result = $('#btn');
+					var btns = $('#openDoorTime');
+					btns.each(function(i, btn) {
+						btn.addEventListener('tap', function() {
+							var _self = this;
+							if(_self.picker) {
+								_self.picker.show(function(rs) {
+									inpi[0].value = rs.text;
+								});
+							} else {
+								var optionsJson = this.getAttribute('data-options') || '{}';
+								var options = JSON.parse(optionsJson);
+								var id = this.getAttribute('id');
+								_self.picker = new $.DtPicker(options);
+								_self.picker.show(function(rs) {
+									inpi[0].value = rs.text;
+								});
+							}
+						}, false);
 					});
-					var sdata = JSON.parse(localStorage.getItem('pid'))
+				})(mui);
+				myajax()
+				var sdata
+
+				function myajax() {
+					sdata = JSON.parse(localStorage.getItem('pid'))
 					$('#title').html(localStorage.getItem("data_name") + '>' + localStorage.getItem('data_name_er'))
-					$('#head').attr('src', localStorage.getItem('http_url') + sdata.us_user_head_portrait)
-					$('#name').html(sdata.us_user_name)
-					$('#phone').attr('href', 'tel:' + sdata.us_user_account)
+					$('#name').html('师傅姓名：' + sdata.us_user_name)
 					$('#yajin').val(localStorage.getItem('data_money_er'))
 					$('#adress').val(localStorage.getItem('Provinces'))
-					document.addEventListener("xiadanyemian", function() {
-						$('#adress').val(localStorage.getItem('Provinces'))
-					})
-					$('#record').click(function() {
-						imgclick()
-					})
-					var cmr = null;
+					$('#phoneNumber').val(localStorage.getItem('phones'))
+					$('#telName').val(localStorage.getItem('name'))
+				}
+				document.addEventListener("xiadanyemian", function() {
+					myajax()
+				})
+				$('#record').click(function() {
+					imgclick()
+				})
+				var cmr = null;
 
-					function imgclick(imid, inid) {
-						var that = this
-						var btnArray = [{
-							title: "照相机"
-						}, {
-							title: "相册"
-						}]; //选择按钮  1 2 3
-						plus.nativeUI.actionSheet({
-								title: "请选择",
-								cancel: "取消", // 0
-								buttons: btnArray
-							},
-							function(e) {
-								var index = e.index; // 
-								switch(index) {
-									case 1:
-										//写自己的逻辑
-										camera();
-										break;
-									case 2:
-										album();
-										break;
-								}
-							});
-					}
-
-					function camera() {
-						var that = this
-						var cmr = plus.camera.getCamera();
-						cmr.captureImage(function(p) {
-							//成功
-							plus.io.resolveLocalFileSystemURL(p, function(entry) {
-								var img_name = entry.name; //获得图片名称
-								var img_path = entry.toLocalURL(); //获得图片路径
-								$('#record').attr('src', img_path);
-								upload_img(img_path);
-							}, function(e) {
-								alert("读取拍照文件错误：" + e.message);
-							});
-
-						}, function(e) {
-							alert("失败：" + e.message);
-						}, {
-							filename: '_doc/camera/',
-							index: 1
-						});
-					}
-
-					function album() {
-						var that = this
-						plus.gallery.pick(function(path) {
-							upload_img(path);
-							$('#record').attr('src', path);
-						}, function(e) {
-							alert("取消选择图片");
-						}, {
-							filter: "image"
-						});
-					}
-
-					function upload_img(p) {
-						var thats = this;
-						var img = new Image();
-						img.src = p; // 传过来的图片路径在这里用。
-						img.onload = function() {
-							var that = this;
-							//生成比例 
-							var w = that.width,
-								h = that.height,
-								scale = w / h;
-							w = 280 || w; //480  你想压缩到多大，改这里
-							h = w / scale;
-							//生成canvas
-							var canvas = document.createElement('canvas');
-							var ctx = canvas.getContext('2d');
-							$(canvas).attr({
-								width: w,
-								height: h
-							});
-							ctx.drawImage(that, 0, 0, w, h);
-							$.ajax({
-								type: "post",
-								url: localStorage.getItem('http_url') + '/user/shift',
-								dataType: 'json',
-								data: {
-									image: canvas.toDataURL('image/jpeg', 1 || 0.8)
-								},
-								success: function(res) {
-									myaudio = res.data
-								}
-							});
-						}
-					}
-					// 摄像
-					$('#videoCapture').click(function() {
-						cmr = plus.camera.getCamera();
-						var res = cmr.supportedVideoResolutions[0];
-						var fmt = cmr.supportedVideoFormats[0];
-						cmr.startVideoCapture(function(path) {
-								plus.nativeUI.showWaiting('上传视频中')
-								$('video').attr('src', path).show()
-								var task = plus.uploader.createUpload(localStorage.getItem('http_url') + "/userUpload/Upload", {
-										method: "POST",
-										blocksize: 204800,
-										priority: 100
-									},
-									function(t, status) {
-										// 上传完成
-										plus.nativeUI.closeWaiting()
-										if(status == 200) {
-											$('#videoCapture').hide()
-
-											myvideo = t.responseText
-											plus.nativeUI.toast('视频文件较大，预览时等待时间较长，请耐心你等待！')
-										} else {
-											alert("Upload failed: " + status);
-										}
-									}
-								);
-								task.addFile(path, {
-									key: "file"
-								});
-								task.addData("file", Math.floor(Math.random() * 100000000 + 10000000).toString());
-								task.start();
-							},
-							function(error) {
-								alert("Capture video failed: " + error.message);
-							}, {
-								resolution: res,
-								format: fmt
+				function imgclick(imid, inid) {
+					var that = this
+					var btnArray = [{
+						title: "照相机"
+					}, {
+						title: "相册"
+					}]; //选择按钮  1 2 3
+					plus.nativeUI.actionSheet({
+							title: "请选择",
+							cancel: "取消", // 0
+							buttons: btnArray
+						},
+						function(e) {
+							var index = e.index; // 
+							switch(index) {
+								case 1:
+									//写自己的逻辑
+									camera();
+									break;
+								case 2:
+									album();
+									break;
 							}
-						);
-					})
-					$('#yhhh').click(function() {
-							function plusReady() {
-								plus.geolocation.getCurrentPosition(function(p) {
-									var nTime = new Date($('#openDoorTime').val())
-									var format = ''
-									format += nTime.getFullYear() + "-";
-									format += (nTime.getMonth() + 1) < 10 ? "0" + (nTime.getMonth() + 1) : (nTime.getMonth() + 1);
-									format += "-";
-									format += nTime.getDate() < 10 ? "0" + (nTime.getDate()) : (nTime.getDate());
-									format += " ";
-									format += nTime.getHours() < 10 ? "0" + (nTime.getHours()) : (nTime.getHours());
-									format += ":";
-									format += nTime.getMinutes() < 10 ? "0" + (nTime.getMinutes()) : (nTime.getMinutes());
-									format += ":00";
-									if($('#detailed').val() == '') {
-										alert('详细地址不能为空')
-										return
+						});
+				}
+
+				function camera() {
+					var that = this
+					var cmr = plus.camera.getCamera();
+					cmr.captureImage(function(p) {
+						//成功
+						plus.io.resolveLocalFileSystemURL(p, function(entry) {
+							var img_name = entry.name; //获得图片名称
+							var img_path = entry.toLocalURL(); //获得图片路径
+							$('#record').attr('src', img_path);
+							upload_img(img_path);
+						}, function(e) {
+							alert("读取拍照文件错误：" + e.message);
+						});
+
+					}, function(e) {
+						alert("失败：" + e.message);
+					}, {
+						filename: '_doc/camera/',
+						index: 1
+					});
+				}
+
+				function album() {
+					var that = this
+					plus.gallery.pick(function(path) {
+						upload_img(path);
+						$('#record').attr('src', path);
+					}, function(e) {
+						alert("取消选择图片");
+					}, {
+						filter: "image"
+					});
+				}
+
+				function upload_img(p) {
+					var thats = this;
+					var img = new Image();
+					img.src = p; // 传过来的图片路径在这里用。
+					img.onload = function() {
+						var that = this;
+						//生成比例 
+						var w = that.width,
+							h = that.height,
+							scale = w / h;
+						w = 280 || w; //480  你想压缩到多大，改这里
+						h = w / scale;
+						//生成canvas
+						var canvas = document.createElement('canvas');
+						var ctx = canvas.getContext('2d');
+						$(canvas).attr({
+							width: w,
+							height: h
+						});
+						ctx.drawImage(that, 0, 0, w, h);
+						$.ajax({
+							type: "post",
+							url: localStorage.getItem('http_url') + '/user/shift',
+							dataType: 'json',
+							data: {
+								image: canvas.toDataURL('image/jpeg', 1 || 0.8)
+							},
+							success: function(res) {
+								myaudio = res.data
+							}
+						});
+					}
+				}
+				// 摄像
+				$('#videoCapture').click(function() {
+					cmr = plus.camera.getCamera();
+					var res = cmr.supportedVideoResolutions[0];
+					var fmt = cmr.supportedVideoFormats[0];
+					cmr.startVideoCapture(function(path) {
+							plus.nativeUI.showWaiting('上传视频中')
+							$('video').attr('src', path).show()
+							var task = plus.uploader.createUpload(localStorage.getItem('http_url') + "/userUpload/Upload", {
+									method: "POST",
+									blocksize: 204800,
+									priority: 100
+								},
+								function(t, status) {
+									// 上传完成
+									plus.nativeUI.closeWaiting()
+									if(status == 200) {
+										$('#videoCapture').hide()
+
+										myvideo = t.responseText
+										plus.nativeUI.toast('视频文件较大，预览时等待时间较长，请耐心你等待！')
+									} else {
+										alert("Upload failed: " + status);
 									}
-									if($('#telName').val() == '') {
-										alert('姓名不能为空')
-										return
-									}
-									if($('#phoneNumber').val() == '') {
-										alert('手机号不能为空')
-										return
-									}
-									if($('#openDoorTime').val() == '') {
-										alert('下单时间不能为空')
-										return
-									}
+								}
+							);
+							task.addFile(path, {
+								key: "file"
+							});
+							task.addData("file", Math.floor(Math.random() * 100000000 + 10000000).toString());
+							task.start();
+						},
+						function(error) {
+							alert("Capture video failed: " + error.message);
+						}, {
+							resolution: res,
+							format: fmt
+						}
+					);
+				})
+				$('#yhhh').click(function() {
+					plus.geolocation.getCurrentPosition(function(p) {
+						if($('#detailed').val() == '') {
+							alert('详细地址不能为空')
+							return
+						}
+						if($('#telName').val() == '') {
+							alert('姓名不能为空')
+							return
+						}
+						if($('#phoneNumber').val() == '') {
+							alert('手机号不能为空')
+							return
+						}
+						if($('#openDoorTime').val() == '') {
+							alert('下单时间不能为空')
+							return
+						}
+						AMap.service('AMap.Geocoder', function() { //回调函数
+							//实例化Geocoder
+							geocoder = new AMap.Geocoder({
+								city: "" //城市，默认：“全国”
+							});
+							geocoder.getLocation($('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text() + $('#detailed').val(), function(status, result) {
+								if(status === 'complete' && result.info === 'OK') {
 									var ajaxjson = {
 										userId: localStorage.getItem('us_user_id'),
 										targetId: sdata.us_user_id,
 										typeId: localStorage.getItem('data_id_er'),
-										region: localStorage.getItem('Provinces'),
+										region: $('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text(),
 										detailed: $('#detailed').val(),
 										telName: $('#telName').val(),
 										phoneNumber: $('#phoneNumber').val(),
-										openDoorTime: format,
+										openDoorTime: inpi[0].value,
 										video: '',
 										img: JSON.stringify([myaudio]),
-										remark: '',
-										target_postion_x: p.coords.longitude,
-										target_postion_y: p.coords.latitude
+										remark: $('#remark').val(),
+										target_postion_x: result.geocodes[0].location.lng,
+										target_postion_y: result.geocodes[0].location.lat
 									}
 									$.ajax({
 										type: "post",
@@ -295,6 +346,7 @@
 											if(res.code == 200) {
 												var wodedingdan = plus.webview.getWebviewById("wodedingdan");
 												mui.fire(wodedingdan, 'wodedingdan', {});
+												plus.nativeUI.toast("提交订单成功！等待接单")
 												mui.openWindow({
 													url: './index.html',
 													id: 'index'
@@ -307,20 +359,15 @@
 											alert('下单失败，请检查网络后再试！')
 										}
 									});
-								})
-							},
-							function(e) {
-								that.city = '获取失败'
+								} else {
+									//获取经纬度失败
+								}
 							});
-
-					}
-					if(window.plus) {
-						plusReady();
-					} else {
-						document.addEventListener("plusready", plusReady, false);
-					}
+						})
+					})
 				})
-			</script>
+			})
+		</script>
 	</body>
 
 </html>

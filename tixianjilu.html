@@ -12,7 +12,7 @@
 	<body>
 		<div class="wrapper">
 			<div class="header">
-				<div class="header-aside" onclick="mui.openWindow('tixian.html')">
+				<div class="header-aside mui-action-back">
 					<img src="img/zuo.png" />
 				</div>
 				<div class="header-text">提现</div>
@@ -33,12 +33,6 @@
 		
 		var lisst=document.getElementById("lisst");
 		var userid=localStorage.getItem("us_user_id");
-		
-			console.log(url_url)
-			
-			console.log(userid)
-			
-			
 				$.ajax({
 					type: "get",
 					url: url_url + "/deposit/list",
