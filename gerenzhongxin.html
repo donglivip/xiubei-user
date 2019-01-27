@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="js/mui.js"></script>
 		<link rel="stylesheet" href="css/mui.css" />
 	</head>
+
 	<body>
 		<div class="wrapper">
 			<div class="header">
@@ -42,7 +43,7 @@
 				</div>
 				<div class="main-two" id="renzheng">
 					<img src="img/renzheng.png" />
-					<div class="two-text" >认证中心</div>
+					<div class="two-text">认证中心</div>
 				</div>
 				<div class="main-two">
 					<img src="img/bangzhu.png" />
@@ -57,96 +58,108 @@
 	</body>
 	<script type="text/javascript" src="js/url.js"></script>
 	<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
-	<script type="text/javascript" src="js/dui.js" ></script>
+	<script type="text/javascript" src="js/dui.js"></script>
 	<script>
 		var url_url = localStorage.getItem("http_url");
 		//获取放在缓存中的昵称
 		var name1 = localStorage.getItem('name');
 		//获取登录的手机号码
 		var ph = localStorage.getItem('phones');
-		var userid=localStorage.getItem("us_user_id");
-		var maintwo=document.getElementsByClassName("main-two");
-		var member=document.getElementById("member");
-		var shezhi=document.getElementById("shezhi");
-		var neme=localStorage.getItem("name");
-		var phones=localStorage.getItem("phones");
-		var namee=document.getElementsByClassName("name1");
-		var one_news=document.getElementsByClassName("one-news");
-//		var vip_id=document.getElementById("vip_id");
-		var ma_vip_id=localStorage.getItem("ma_vip_id");
-//			if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
-//				vip_id.style.display="none";
-//			}else{
-//				vip_id.style.display="block";
-//			}
-			namee[0].innerHTML=neme;
-			one_news[0].innerHTML=phones;
-			//接收通知
-			document.addEventListener("gerenzhongxin",function(){
-//				var vip_id=document.getElementById("vip_id");
-//				var ma_vip_id=localStorage.getItem("ma_vip_id");
-				//会员图标显示
-//				if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
-//					vip_id.style.display="none";
-//				}else{
-//					vip_id.style.display="block";
-//				}
-				if(localStorage.getItem('us_user_state')==2||localStorage.getItem('us_user_state')==3){
-					$('#renzheng').hide()
-				}
-				var neme=localStorage.getItem("name");
-				var phones=localStorage.getItem("phones");
-				
-				var namee=document.getElementsByClassName("name1");
-				var one_news=document.getElementsByClassName("one-news");
-					namee[0].innerHTML=neme;
-					one_news[0].innerHTML=phones;
-					if(localStorage.getItem('us_user_state')==2||localStorage.getItem('us_user_state')==3){
+		var userid = localStorage.getItem("us_user_id");
+		var maintwo = document.getElementsByClassName("main-two");
+		var member = document.getElementById("member");
+		var shezhi = document.getElementById("shezhi");
+		var neme = localStorage.getItem("name");
+		var phones = localStorage.getItem("phones");
+		var namee = document.getElementsByClassName("name1");
+		var one_news = document.getElementsByClassName("one-news");
+		//		var vip_id=document.getElementById("vip_id");
+		var ma_vip_id = localStorage.getItem("ma_vip_id");
+		//			if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
+		//				vip_id.style.display="none";
+		//			}else{
+		//				vip_id.style.display="block";
+		//			}
+		namee[0].innerHTML = neme;
+		one_news[0].innerHTML = phones;
+		//接收通知
+		document.addEventListener("gerenzhongxin", function() {
+			//				var vip_id=document.getElementById("vip_id");
+			//				var ma_vip_id=localStorage.getItem("ma_vip_id");
+			//会员图标显示
+			//				if (ma_vip_id == '' || ma_vip_id == 'null' || ma_vip_id == null || ma_vip_id == undefined) {
+			//					vip_id.style.display="none";
+			//				}else{
+			//					vip_id.style.display="block";
+			//				}
+			if(localStorage.getItem('us_user_state') == 2 || localStorage.getItem('us_user_state') == 3) {
 				$('#renzheng').hide()
+			}
+			var neme = localStorage.getItem("name");
+			var phones = localStorage.getItem("phones");
+
+			var namee = document.getElementsByClassName("name1");
+			var one_news = document.getElementsByClassName("one-news");
+			namee[0].innerHTML = neme;
+			one_news[0].innerHTML = phones;
+		})
+		//设置
+		shezhi.addEventListener("tap", function() {
+			var userid = localStorage.getItem("us_user_id");
+			if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
+				mui.toast("请登录");
+				dui.jump('denglu.html', 'denglu');
+				return;
+			} else {
+				dui.jump("shezhi.html", "shezhi")
 			}
 		})
-			//设置
-			shezhi.addEventListener("tap",function(){
-				var userid=localStorage.getItem("us_user_id");
-				if(userid == '' || userid == 'null' || userid == null || userid == undefined) {
-					mui.toast("请登录");
-					dui.jump('denglu.html', 'denglu');
-					return;
-				}else{
-					dui.jump("shezhi.html","shezhi")
-				}	
-			})
-			//开通会员
-//			member.addEventListener("tap",function(){
-//					dui.jump("membership.html","membership")
-//			})
-			
-			//我的钱包
-			maintwo[0].addEventListener("tap",function(){
-					dui.jump("mymoney.html","mymoney")
-			})
-			
-			//认证中心
-			maintwo[1].addEventListener("tap",function(){
-					dui.jump("renzhenzhongxin.html","renzhenzhongxin")
-			})
-			if(localStorage.getItem('us_user_state')==2||localStorage.getItem('us_user_state')==3){
-				$('#renzheng').hide()
-			}
-			//帮助
-			maintwo[2].addEventListener("tap",function(){
-				
-					dui.jump("shiyongbangzhu.html","shiyongbangzhu")
-				
-			})
-			//关于我们
-			maintwo[3].addEventListener("tap",function(){
-				
-					dui.jump("guanyuwomen.html","guanyuwomen")
-				
-			})
-		
-		
+		//开通会员
+		//			member.addEventListener("tap",function(){
+		//					dui.jump("membership.html","membership")
+		//			})
+
+		//我的钱包
+		maintwo[0].addEventListener("tap", function() {
+			dui.jump("mymoney.html", "mymoney")
+		})
+
+		//认证中心
+		maintwo[1].addEventListener("tap", function() {
+			$.ajax({
+				type: "post",
+				url: localStorage.getItem("http_url") + "/user/place",
+				dataType: 'json',
+				async: true,
+				data: {
+					id: localStorage.getItem("us_user_id")
+				},
+				success: function(data) {
+					if(data.data.us_user_state == 2) {
+						plus.nativeUI.toast('您已完成实名认证！')
+					} else if(data.data.us_user_state == 3) {
+						plus.nativeUI.toast('您的信息正在审核中！')
+					} else {
+						dui.jump("renzhenzhongxin.html", "renzhenzhongxin")
+					}
+				},
+				error: function(err) {
+					console.log(JSON.stringify(localStorage.getItem("us_user_id")))
+				}
+			});
+		})
+		//帮助
+		maintwo[2].addEventListener("tap", function() {
+
+			dui.jump("shiyongbangzhu.html", "shiyongbangzhu")
+
+		})
+		//关于我们
+		maintwo[3].addEventListener("tap", function() {
+
+			dui.jump("guanyuwomen.html", "guanyuwomen")
+
+		})
 	</script>
 
 </html>
