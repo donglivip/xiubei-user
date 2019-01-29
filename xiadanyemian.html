@@ -66,7 +66,7 @@
 			</div>
 			<div class="divyi flex">
 				<span class="font">手机号码：</span>
-				<input class="inpi cell" style="border: 0px;" placeholder="125478963789" type="number" value="">
+				<input class="inpi cell" style="border: 0px;" placeholder="请输入手机号" type="number" value="" id="phone">
 			</div>
 			<div class="divyi flex">
 				<span class="font">下单类型：</span>
@@ -133,11 +133,9 @@
 			var oid_idd = localStorage.getItem("oid_idd");
 			var data_name = localStorage.getItem("data_name");
 			var data_money_er = localStorage.getItem("data_money_er")
-			var phones = localStorage.getItem("phones");
 			var cell = document.getElementsByClassName("cell");
 			var inpi = document.getElementsByClassName("inpi");
 			cell[0].innerHTML = data_name + ">" + data_name_er;
-			cell[1].value = phones;
 			cell[2].value = data_money_er;
 			document.addEventListener("xiadanyemian", function() {
 				var dizhi = localStorage.getItem("dizhi");
@@ -280,7 +278,6 @@
 						var data_id_er = localStorage.getItem('data_id_er')
 						var district = localStorage.getItem("district");
 						var Provinces = localStorage.getItem("Provinces");
-						var phones = localStorage.getItem("phones");
 						//用户名称
 						var name = inpi[1].value;
 						//详细地址
@@ -314,7 +311,7 @@
 										'region': $('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text(), //地区省市县
 										'detailed': xiangxi, //详细地址
 										'telName': name, //联系人
-										'phoneNumber': phones, //手机号
+										'phoneNumber': $('#phone').val(), //手机号
 										'remark': Remarks, //备注
 										'openDoorTime': time, //时间
 										'video': '', //视频

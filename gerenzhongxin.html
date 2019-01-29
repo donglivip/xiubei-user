@@ -92,9 +92,6 @@
 			//				}else{
 			//					vip_id.style.display="block";
 			//				}
-			if(localStorage.getItem('us_user_state') == 2 || localStorage.getItem('us_user_state') == 3) {
-				$('#renzheng').hide()
-			}
 			var neme = localStorage.getItem("name");
 			var phones = localStorage.getItem("phones");
 
@@ -144,7 +141,7 @@
 					}
 				},
 				error: function(err) {
-					console.log(JSON.stringify(localStorage.getItem("us_user_id")))
+					alert('网络连接失败！')
 				}
 			});
 		})
