@@ -21,16 +21,7 @@
 			margin-left: .2rem;
 			margin-right: .1rem;
 		}
-		.share .share-top {
-			height: 4rem;
-			width: 100%;
-			background: #FFFFFF;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			flex-direction: column;
-			margin-bottom: .2rem;
-		}
+		.share .share-top{height: 4rem;width: 100%;background: #FFFFFF;display: flex;align-items: center;justify-content: space-around;margin-bottom: .2rem;}
 		.share .share-top img,
 		canvas {
 			height: 2.5rem;
@@ -65,8 +56,14 @@
 			<!--中间主体-->
 			<div class="main big-main">
 				<div class="share-top">
-					<p>分享二维码立刻开始赚钱</p>
-					<div id="output"></div>
+					<div class="outbox">
+						<p>用户端</p>
+						<div id="output"></div>
+					</div>
+					<div class="outbox">
+						<p>师傅端</p>
+						<div id="output02"></div>
+					</div>
 				</div>
 				<div class="help-item" onclick="sharew()">
 					<img src="img/wpay.png" />
@@ -87,6 +84,7 @@
 			var scene = "最好用的维修软件";
 			jQuery(function() {
 				jQuery('#output').qrcode(localStorage.getItem('http_url') + "/api/User/consumer?rem=" + localStorage.getItem('usShareCode'));
+				jQuery('#output02').qrcode(localStorage.getItem('http_url') + "/api/User/serve?rem=" + localStorage.getItem('usShareCode'));
 			})
 			var shares = null,
 				sharewx = null,

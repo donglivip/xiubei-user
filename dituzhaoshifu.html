@@ -100,6 +100,12 @@
 								userId: localStorage.getItem('us_user_id')
 							},
 							success: function(res) {
+								console.log(JSON.stringify({
+								x: x,
+								y: y,
+								type: localStorage.getItem('data_id_er'),
+								userId: localStorage.getItem('us_user_id')
+							}))
 								sdata = res.data
 								for(var i = 0; i < res.data.length; i++) {
 									addmarker(res.data[i].us_user_x, res.data[i].us_user_y, i)
