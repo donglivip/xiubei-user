@@ -85,7 +85,7 @@
 							'<img src="img/da.png"/>' +
 							'</div>' +
 							'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">4</a>' +
-							'<h1 style="width: 80%;">已接单，正在前往途中,<span style="color: red;" onclick="gopay()">查看师傅位置</span></h1>' +
+							'<h1 style="width: 80%;">已接单，正在前往途中</h1>' +
 							'<div class="img-da">' +
 							'<img src="img/da.png"/>' +
 							'</div>' +
@@ -115,7 +115,7 @@
 							'<img src="img/da.png"/>' +
 							'</div>' +
 							'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #000000;">4</a>' +
-							'<h1 style="width: 80%;">已接单，正在前往途中,<span style="color: red;" onclick="gopay()">查看师傅位置</span></h1>' +
+							'<h1 style="width: 80%;">已接单，正在前往途中</h1>' +
 							'<div class="img-da">' +
 							'<img src="img/da.png"/>' +
 							'</div>' +
@@ -198,6 +198,44 @@
 							'<img src="img/da.png"/>' +
 							'</div>' +
 							'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;margin-top: 0.3rem;">6</a>' +
+							'<h1 style="width: 80%;margin-top: 0.4rem;"">服务已完成，请评价</h1>';
+					} else if(data.data.pb_order_state == 12) {
+						var t = '<div class="Order_ca">' +
+							'<div class="fle" style="margin-top:0.3rem;margin-bottom: 0.3rem;border: 1px slod red;">' +
+							'<div class="fl">' +
+							'<img style="width:1rem;height:1rem;" src="' + url_url + data.data.master.us_user_head_portrait + '">' +
+							'<span style="font-size: 0.28rem;margin-left:20px;">' + data.data.master.us_user_name + '</span>' +
+							'</div>' +
+							'<img phone="' + data.data.master.us_user_phone + '" style="margin-right:0.5rem;width: 0.64rem;height: 0.64rem;" src="img/dianhua.png">' +
+							'</div>' +
+							'</div>';
+
+						var o = '<a>1</a>' +
+							'<h1>已接单</h1>' +
+							'<div class="img-da">' +
+							'<img src="img/da.png"/>' +
+							'</div>' +
+							'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">2</a>' +
+							'<h1 style="width: 80%;">已接单</h1>' +
+							'<div class="img-da">' +
+							'<img src="img/da.png"/>' +
+							'</div>' +
+							'<a style="background: #2484E8;border: 0px solid #DDD;color: #ffffff;">3</a>' +
+							'<h1 style="width: 80%;">订单进行中</h1>' +
+							'<div class="img-da">' +
+							'<img src="img/da.png"/>' +
+							'</div>' +
+							'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #DDD;">4</a>' +
+							'<h1 style="width: 80%;">已接单，正在前往途中</h1>' +
+							'<div class="img-da">' +
+							'<img src="img/da.png"/>' +
+							'</div>' +
+							'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #DDD;">5</a>' +
+							'<h1 style="width:80%;">师傅已到达</h1>' +
+							'<div class="img-da">' +
+							'<img src="img/da.png"/>' +
+							'</div>' +
+							'<a style="background: #FFFFFF;border: 1px solid #DDD;color: #DDD;margin-top: 0.3rem;">6</a>' +
 							'<h1 style="width: 80%;margin-top: 0.4rem;"">服务已完成，请评价</h1>';
 					} else {
 						var t = ''
