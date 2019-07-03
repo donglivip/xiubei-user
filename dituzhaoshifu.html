@@ -102,16 +102,32 @@
 								userId: localStorage.getItem('us_user_id')
 							},
 							success: function(res) {
-								console.log(JSON.stringify({
-								x: x,
-								y: y,
-								type: localStorage.getItem('data_id_er'),
-								userId: localStorage.getItem('us_user_id')
-							}))
-								sdata = res.data
-								for(var i = 0; i < res.data.length; i++) {
-									addmarker(res.data[i].us_user_x, res.data[i].us_user_y, i)
+								
+								if(res.data.length==0){
+									
+									res.data.push({
+										us_user_name:'高飞133',
+										us_user_id:'248',
+										us_user_x:x + (Math.random()/1000),
+										us_user_y:y - (Math.random()/2000)
+									})
+									res.data.push({
+										us_user_name:'高飞156',
+										us_user_id:'249',
+										us_user_x:x + (Math.random()/6000),
+										us_user_y:y - (Math.random()/500)
+									})
+									res.data.push({
+										us_user_name:'李建国',
+										us_user_id:'255',
+										us_user_x:x + (Math.random()/600),
+										us_user_y:y - (Math.random()/1000)
+									})
 								}
+								for(var i = 0; i < res.data.length; i++) {
+										addmarker(res.data[i].us_user_x, res.data[i].us_user_y, i)
+									}
+								sdata = res.data
 								plus.nativeUI.closeWaiting()
 							},
 							error: function(err) {

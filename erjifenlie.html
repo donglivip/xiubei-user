@@ -58,19 +58,19 @@
 						console.log(JSON.stringify(data));
 						var tpml='';
 						for (var a in data.data) {
-							if (data.data[a].pb_skill_type_two_icon=='null'||data.data[a].pb_skill_type_two_icon==null) {
-								var r='<img src="img/4949.png" />'
-							}else{
-								var r='<img src="'+url_url+data.data[a].pb_skill_type_two_icon+'" />'
-							}
+//							if (data.data[a].pb_skill_type_two_icon=='null'||data.data[a].pb_skill_type_two_icon==null) {
+//								var r='<img src="img/4949.png" />'
+//							}else{
+//								var r='<img src="'+url_url+data.data[a].pb_skill_type_two_icon+'" />'
+//							}
 							
 							tpml+='<div class="wwwd" data_id_er="'+data.data[a].pb_skill_type_two_id+'" data_name_er="'+data.data[a].pb_skill_type_title+'"  data_money_er="'+data.data[a].pb_skill_type_two_money+'">'
 						 				+'<div class="dsaaa">'
-							 				+r
+							 				
 							 			+'</div>'
 							 			+'<div class="dsaaa">'
 							 					+'<div class="dsaa_span">'
-								 					+'<span style="float:left;overflow:hidden;white-space: nowrap; text-overflow:ellipsis;width:80px;text-align: left;">'+data.data[a].pb_skill_type_title+'</span>'
+								 					+'<span style="float:left;overflow:hidden;white-space: nowrap; text-overflow:ellipsis;width:100%;font-size:.3rem">'+data.data[a].pb_skill_type_title+'</span>'
 //								 					+'<span style="float:right;">下单押金'+data.data[a].pb_skill_type_two_money+'</span>'
 								 				+'</div>'
 							 			+'</div>'
