@@ -76,6 +76,8 @@
 				<span class="font">下单押金：</span>
 				<input class="inpi  cell" style="border: 0px;" value="50元" type="text" readonly="readonly">
 			</div>
+			<span class="font" id="Text" style="color: hotpink;"></span>
+
 			<div class="divyi flex">
 				<span class="font">当前位置：</span>
 				<div id="city">
@@ -84,6 +86,7 @@
 					<select class="dist" name="usAdsArea"></select>
 				</div>
 			</div>
+			
 			<div class="divyi flex">
 				<span class="font">详细地址：</span>
 				<input class="inpi cell" id="dsads" style="border: 0px;" type="text" placeholder="请输入详细地址" value="">
@@ -112,7 +115,33 @@
 		<script type="text/javascript" src="js/dui.js"></script>
 		<script src="js/jquery.cityselect.js" type="text/javascript" charset="utf-8"></script>
 		<script>
+			
+				
+			$('#GetCurrentPosition').on('touchstart', function(){
+			
+			});
+			
+			
 			mui.plusReady(function() {
+				// 测试能不能获取位置
+				plus.geolocation.getCurrentPosition( function(postion){
+				$('#Text').append('经度: ' + postion.coords.longitude + '纬度: ' + postion.coords.latitude + "<br />");
+				$('#Text').append('当前定位: ' + postion.address.city + postion.address.district + postion.address.street + postion.addresses);
+
+				// $('#Text').append('当前城市: ' + postion.address.city + "<br />");
+				// $('#Text').append('当前区县: ' + postion.address.district + "<br />");
+				// $('#Text').append('当前接到: ' + postion.address.street + "<br />");
+				// $('#Text').append('当前地址: ' + postion.addresses + "<br />");
+				console.log(postion.address.city + postion.address.district + postion.address.street + postion.addresses)
+				}, function(error){
+				$('#Text').append(error.code + ": " + error.message);
+				});
+				
+				
+				
+				
+				
+				
 				plus.geolocation.getCurrentPosition(function(position) {
 					$("#city").citySelect({
 						prov: position.address.province.substring(0, 2),
@@ -301,7 +330,7 @@
 						AMap.service('AMap.Geocoder', function() { //回调函数
 							//实例化Geocoder
 							geocoder = new AMap.Geocoder({
-								city: "" //城市，默认：“全国”
+								city: "全国" //城市，默认：“全国”
 							});
 							geocoder.getLocation($('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text() + xiangxi, function(status, result) {
 								if(status === 'complete' && result.info === 'OK') {
