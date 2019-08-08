@@ -108,6 +108,7 @@ function plusReady() {
 			url: localStorage.getItem('http_url') + "/api/svn/up2",
 			dataType: 'json',
 			success: function success(res) {
+				console.log(res.pb_svn_number)
 				if (res.pb_svn_number != inf.version) {
 					//										版本更新
 					plus.nativeUI.showWaiting("下载更新资源包,请勿关闭页面！");

@@ -81,9 +81,7 @@
 			<div class="divyi flex">
 				<span class="font">当前位置：</span>
 				<div id="city">
-					<select class="prov" name="usAdsProvince"></select>
-					<select class="city" name="usAdsCity"></select>
-					<select class="dist" name="usAdsArea"></select>
+					<input type='text' id='city-picker' style="border: 0;"/>
 				</div>
 			</div>
 			
@@ -109,53 +107,29 @@
 		<div class="button_cal">
 			<button class="button" id="queren">确定下单</button>
 		</div>
+		<link rel="stylesheet" type="text/css" href="css/jquery.weui.css"/>
 		<script type="text/javascript" src="js/mui.min.js"></script>
 		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
-		<script type="text/javascript" src="js/mui.picker.min.js"></script>
 		<script type="text/javascript" src="js/dui.js"></script>
-		<script src="js/jquery.cityselect.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.weui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city-picker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
 		<script>
-			
-				
-			$('#GetCurrentPosition').on('touchstart', function(){
-			
-			});
-			
-			
 			mui.plusReady(function() {
-				// 测试能不能获取位置
-				plus.geolocation.getCurrentPosition( function(postion){
-				$('#Text').append('经度: ' + postion.coords.longitude + '纬度: ' + postion.coords.latitude + "<br />");
-				$('#Text').append('当前定位: ' + postion.address.city + postion.address.district + postion.address.street + postion.addresses);
-
-				// $('#Text').append('当前城市: ' + postion.address.city + "<br />");
-				// $('#Text').append('当前区县: ' + postion.address.district + "<br />");
-				// $('#Text').append('当前接到: ' + postion.address.street + "<br />");
-				// $('#Text').append('当前地址: ' + postion.addresses + "<br />");
-				console.log(postion.address.city + postion.address.district + postion.address.street + postion.addresses)
-				}, function(error){
-				$('#Text').append(error.code + ": " + error.message);
-				});
-				
-				
-				
-				
-				
-				
 				plus.geolocation.getCurrentPosition(function(position) {
-					$("#city").citySelect({
-						prov: position.address.province.substring(0, 2),
-						city: position.address.city.substring(0, 2),
-						dist: position.address.district,
-						nodata: "none"
-					});
+					$("#city-picker").val(position.address.province +' '+position.address.city+' '+position.address.district)
 				}, function(e) {
 					outSet("获取定位位置信息失败：" + e.message);
 				}, {
 					geocode: true
 				});
 			})
-
+			$("#city-picker").cityPicker({
+		        title: "选择省市区/县",
+		        onChange: function (picker, values, displayValues) {
+		            console.log(values, displayValues);
+		        }
+		    });
 			var url_url = localStorage.getItem("http_url");
 			var data_id_er = localStorage.getItem('data_id_er')
 			var data_name_er = localStorage.getItem('data_name_er')
@@ -332,12 +306,12 @@
 							geocoder = new AMap.Geocoder({
 								city: "全国" //城市，默认：“全国”
 							});
-							geocoder.getLocation($('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text() + xiangxi, function(status, result) {
+							geocoder.getLocation($('#city-picker').val()+ xiangxi, function(status, result) {
 								if(status === 'complete' && result.info === 'OK') {
 									var ajaxjson = {
 										'userId': us_user_id, //用户ID
 										'typeId': data_id_er, //二级ID
-										'region': $('.prov option:selected').text() + '省' + $('.city option:selected').text() + '市' + $('.dist option:selected').text(), //地区省市县
+										'region': $('#city-picker').val(), //地区省市县
 										'detailed': xiangxi, //详细地址
 										'telName': name, //联系人
 										'phoneNumber': $('#phone').val(), //手机号
