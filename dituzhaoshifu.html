@@ -102,7 +102,7 @@
 								userId: localStorage.getItem('us_user_id')
 							},
 							success: function(res) {
-								
+								console.log(JSON.stringify(res))
 								if(res.data.length==0){
 									
 									res.data.push({
